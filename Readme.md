@@ -2,7 +2,9 @@
 
 ## About
 
-LegacyWrapper uses a x86 wrapper to call legacy dlls from 64 bit processes.
+LegacyWrapper uses a x86 wrapper to call legacy dlls from a 64bit processes.
+
+Since you can't load a 32bit dll into a 64bit process, this wrapper utilizes a named pipe to abstract the call. You won't notice this though, because all the magic is hidden behind a single static method.
 
 ## Usage
 
@@ -16,6 +18,10 @@ private delegate int GetSystemMetrics(int index);
 int x = (int)WrapperClient.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 0 });
 int y = (int)WrapperClient.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 1 });
 ```
+
+## Todo
+
+* Support for Attributes like [CallingConvention]
 
 ## License
 
