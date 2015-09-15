@@ -23,6 +23,10 @@ int y = (int)WrapperClient.Call<GetSystemMetrics>("User32.dll", "GetSystemMetric
 
 * Support for Attributes like [CallingConvention]
 
+## Contributing
+
+Feel free to submit any [suggestions/issues](https://github.com/CodefoundryDE/LegacyWrapper/issues) and contribute to TheaterJS.
+
 ## License
 
 Copyright (c) 2015, Franz Wimmer. (MIT License)
