@@ -2,7 +2,7 @@
 
 ## About
 
-LegacyWrapper uses a x86 wrapper to call legacy dlls from a 64bit processes.
+LegacyWrapper uses a x86 wrapper to call legacy dlls from a 64bit process.
 
 Since you can't load a 32bit dll into a 64bit process, this wrapper utilizes a named pipe to abstract the call. You won't notice this though, because all the magic is hidden behind a single static method.
 
