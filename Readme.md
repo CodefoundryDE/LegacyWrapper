@@ -14,18 +14,24 @@ Make sure to place both the wrapper executable and the LegacyWrapperClient.dll i
 // Define delegate matching api function
 private delegate int GetSystemMetrics(int index);
 
-// Make call providing library name, function name, and parameters
-int x = (int)WrapperClient.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 0 });
-int y = (int)WrapperClient.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 1 });
+// Create new WrapperClient
+// Remember to ensure a call to the Dispose()-Method!
+using (var client = new WrapperClient())
+{
+    // Make calls providing library name, function name, and parameters
+    int x = (int)client.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 0 });
+    int y = (int)client.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 1 });
+}
 ```
 
 ## Todo
 
-* Support for Attributes like [CallingConvention]
+* Support for Attributes like `[CallingConvention]`.
+* Type safe usage of generics in Call<T>-Method
 
 ## Contributing
 
-Feel free to submit any [suggestions/issues](https://github.com/CodefoundryDE/LegacyWrapper/issues) and contribute to TheaterJS.
+Feel free to submit any [suggestions/issues](https://github.com/CodefoundryDE/LegacyWrapper/issues) and contribute to LegacyWrapper.
 
 ## License
 

@@ -38,28 +38,31 @@ namespace LegacyWrapper
 
                 // Receive CallData from client
                 var formatter = new BinaryFormatter();
-                var data = (CallData)formatter.Deserialize(server);
+                CallData data;
 
-                try
+                while ((data = (CallData)formatter.Deserialize(server)).Status != KeepAliveStatus.Close)
                 {
-                    // Load requested library
-                    using (var library = NativeLibrary.Load(data.Library, NativeLibraryLoadOptions.SearchAll))
+                    try
                     {
-                        IntPtr func = library.GetFunctionPointer(data.ProcedureName);
-                        var method = Marshal.GetDelegateForFunctionPointer(func, data.Delegate);
+                        // Load requested library
+                        using (var library = NativeLibrary.Load(data.Library, NativeLibraryLoadOptions.SearchAll))
+                        {
+                            IntPtr func = library.GetFunctionPointer(data.ProcedureName);
+                            var method = Marshal.GetDelegateForFunctionPointer(func, data.Delegate);
 
-                        // Invoke requested method
-                        object result = method.DynamicInvoke(data.Parameters);
+                            // Invoke requested method
+                            object result = method.DynamicInvoke(data.Parameters);
 
-                        // Write result back to client
-                        formatter.Serialize(server, result);
+                            // Write result back to client
+                            formatter.Serialize(server, result);
+                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    // Write Exception to client
-                    formatter.Serialize(server, new LegacyWrapperException(
-                        "An error occured while calling a library function. See the inner exception for details.", e));
+                    catch (Exception e)
+                    {
+                        // Write Exception to client
+                        formatter.Serialize(server, new LegacyWrapperException(
+                            "An error occured while calling a library function. See the inner exception for details.", e));
+                    }
                 }
             }
         }

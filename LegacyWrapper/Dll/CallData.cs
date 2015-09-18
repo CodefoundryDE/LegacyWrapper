@@ -12,6 +12,11 @@ namespace LegacyWrapper.Dll
     [Serializable]
     public class CallData
     {
+        public CallData()
+        {
+            Status = KeepAliveStatus.KeepAlive;
+        }
+
         /// <summary>
         /// Name of the library to call.
         /// </summary>
@@ -31,5 +36,16 @@ namespace LegacyWrapper.Dll
         /// Delegate type to use for the call.
         /// </summary>
         public Type Delegate { get; set; }
+
+        /// <summary>
+        /// Status indicating if the wrapper executable should close the connection and terminate itself
+        /// </summary>
+        public KeepAliveStatus Status { get; set; }
+    }
+
+    public enum KeepAliveStatus
+    {
+        KeepAlive,
+        Close
     }
 }
