@@ -43,6 +43,9 @@ namespace LegacyWrapperClient.Client
         /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
         public object Call<T>(string library, string function, object[] args) where T : class
         {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(WrapperClient));
+
             var info = new CallData
             {
                 Library = library,

@@ -150,8 +150,20 @@ namespace LegacyWrapperTest.Client
         {
             using (var client = new WrapperClient())
             {
-                client.Call<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[] {5});
+                client.Call<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[] { 5 });
             }
+        }
+
+        [TestMethod, ExpectedException(typeof(ObjectDisposedException))]
+        public void TestMustThrowObjectDisposedException()
+        {
+            WrapperClient client;
+            using (client = new WrapperClient())
+            {
+                // Do Nothing
+            }
+
+            client.Call<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[] { });
         }
     }
 }
