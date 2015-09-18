@@ -33,18 +33,19 @@ namespace LegacyWrapperClient.Client
         }
 
         /// <summary>
-        /// 
+        /// Executes a call to a library.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dllName"></param>
-        /// <param name="function"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public object Call<T>(string dllName, string function, object[] args) where T : class
+        /// <typeparam name="T">Delegate Type to call.</typeparam>
+        /// <param name="library">Name of the library to load.</param>
+        /// <param name="function">Name of the function to call.</param>
+        /// <param name="args">Array of args to pass to the function.</param>
+        /// <returns>Result object returned by the library.</returns>
+        /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
+        public object Call<T>(string library, string function, object[] args) where T : class
         {
             var info = new CallData
             {
-                Library = dllName,
+                Library = library,
                 ProcedureName = function,
                 Parameters = args,
                 Delegate = typeof(T),
