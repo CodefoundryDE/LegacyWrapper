@@ -11,6 +11,7 @@ namespace LegacyWrapperTest.Client
     [TestClass]
     public class WrapperClientTest
     {
+        private const string TestDllPath = @"TestLibrary\TestDll.dll";
 
         // We assume the following dll functions in our Test.dll here: 
         //
@@ -50,7 +51,7 @@ namespace LegacyWrapperTest.Client
             int result;
             using (var client = new WrapperClient())
             {
-                result = (int)client.Invoke<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[] { input });
+                result = (int)client.Invoke<TestStdCallDelegate>(TestDllPath, "TestStdCall", new object[] { input });
             }
 
             Assert.AreEqual(input, result);
@@ -67,7 +68,7 @@ namespace LegacyWrapperTest.Client
             int result;
             using (var client = new WrapperClient())
             {
-                result = (int)client.Invoke<TestNormalFuncDelegate>("TestDll.dll", "TestNormalFunc", new object[] { input });
+                result = (int)client.Invoke<TestNormalFuncDelegate>(TestDllPath, "TestNormalFunc", new object[] { input });
             }
 
             Assert.AreNotEqual(input, result);
@@ -81,7 +82,7 @@ namespace LegacyWrapperTest.Client
             string result;
             using (var client = new WrapperClient())
             {
-                result = (string)client.Invoke<TestPCharHandlingDelegate>("TestDll.dll", "TestPCharHandling", new object[] { input });
+                result = (string)client.Invoke<TestPCharHandlingDelegate>(TestDllPath, "TestPCharHandling", new object[] { input });
             }
 
             Assert.AreEqual(input, result);
@@ -95,7 +96,7 @@ namespace LegacyWrapperTest.Client
             string result;
             using (var client = new WrapperClient())
             {
-                result = (string)client.Invoke<TestPWideCharHandlingDelegate>("TestDll.dll", "TestPWideCharHandling", new object[] { input });
+                result = (string)client.Invoke<TestPWideCharHandlingDelegate>(TestDllPath, "TestPWideCharHandling", new object[] { input });
             }
 
             Assert.AreEqual(input, result);
@@ -110,7 +111,7 @@ namespace LegacyWrapperTest.Client
                 // Do Nothing
             }
 
-            client.Invoke<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[0]);
+            client.Invoke<TestStdCallDelegate>(TestDllPath, "TestStdCall", new object[0]);
         }
 
         /// <summary>
