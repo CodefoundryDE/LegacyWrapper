@@ -19,8 +19,8 @@ private delegate int GetSystemMetrics(int index);
 using (var client = new WrapperClient())
 {
     // Make calls providing library name, function name, and parameters
-    int x = (int)client.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 0 });
-    int y = (int)client.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 1 });
+    int x = (int)client.Invoke<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 0 });
+    int y = (int)client.Invoke<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 1 });
 }
 ```
 

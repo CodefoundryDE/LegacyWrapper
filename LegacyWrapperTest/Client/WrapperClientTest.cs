@@ -11,15 +11,22 @@ namespace LegacyWrapperTest.Client
     [TestClass]
     public class WrapperClientTest
     {
+
+        // We assume the following dll functions in our Test.dll here: 
+        //
+        // function TestStdCall(const AParam: Integer): Integer; stdcall;
+        // function TestNormalFunc(const AParam: Integer): Integer;
+        // function TestPCharHandling(const AParam: PChar): PChar; stdcall;
+        // function TestPWideCharHandling(const AParam: PWideChar): PWideChar; stdcall;
+        //
+        // Every function is supposed to return the input parameter unchanged.
+
         // Define delegates matching api function
         private delegate int GetSystemMetrics(int index);
 
         private delegate int TestStdCallDelegate(int param);
-
         private delegate int TestNormalFuncDelegate(int param);
-
         private delegate string TestPCharHandlingDelegate(string param);
-
         private delegate string TestPWideCharHandlingDelegate(string param);
 
         [TestMethod]
@@ -30,8 +37,8 @@ namespace LegacyWrapperTest.Client
             using (var client = new WrapperClient())
             {
                 // Make calls providing library name, function name, and parameters
-                int x = (int)client.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 0 });
-                int y = (int)client.Call<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 1 });
+                int x = (int)client.Invoke<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 0 });
+                int y = (int)client.Invoke<GetSystemMetrics>("User32.dll", "GetSystemMetrics", new object[] { 1 });
             }
         }
 
@@ -43,12 +50,15 @@ namespace LegacyWrapperTest.Client
             int result;
             using (var client = new WrapperClient())
             {
-                result = (int)client.Call<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[] { input });
+                result = (int)client.Invoke<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[] { input });
             }
 
             Assert.AreEqual(input, result);
         }
 
+        /// <summary>
+        /// This will NOT work, since the dll function is not a stdcall function
+        /// </summary>
         [TestMethod]
         public void TestNormalFunc()
         {
@@ -57,10 +67,10 @@ namespace LegacyWrapperTest.Client
             int result;
             using (var client = new WrapperClient())
             {
-                result = (int)client.Call<TestNormalFuncDelegate>("TestDll.dll", "TestNormalFunc", new object[] { input });
+                result = (int)client.Invoke<TestNormalFuncDelegate>("TestDll.dll", "TestNormalFunc", new object[] { input });
             }
 
-            Assert.AreEqual(input, result);
+            Assert.AreNotEqual(input, result);
         }
 
         [TestMethod]
@@ -71,7 +81,7 @@ namespace LegacyWrapperTest.Client
             string result;
             using (var client = new WrapperClient())
             {
-                result = (string)client.Call<TestPCharHandlingDelegate>("TestDll.dll", "TestPCharHandling", new object[] { input });
+                result = (string)client.Invoke<TestPCharHandlingDelegate>("TestDll.dll", "TestPCharHandling", new object[] { input });
             }
 
             Assert.AreEqual(input, result);
@@ -85,73 +95,10 @@ namespace LegacyWrapperTest.Client
             string result;
             using (var client = new WrapperClient())
             {
-                result = (string)client.Call<TestPWideCharHandlingDelegate>("TestDll.dll", "TestPWideCharHandling", new object[] { input });
+                result = (string)client.Invoke<TestPWideCharHandlingDelegate>("TestDll.dll", "TestPWideCharHandling", new object[] { input });
             }
 
             Assert.AreEqual(input, result);
-        }
-
-        [TestMethod]
-        [Ignore]
-        public void TestPerformance()
-        {
-            Stopwatch stopwatch = new Stopwatch();
-
-            long seed = Environment.TickCount;  // Prevents the JIT Compiler 
-                                                // from optimizing Fkt calls away
-            long result = 0;
-            int count = 100000000;
-
-            Debug.WriteLine("20 Tests without correct preparation");
-            Debug.WriteLine("Warmup");
-            for (int repeat = 0; repeat < 20; ++repeat)
-            {
-                stopwatch.Reset();
-                stopwatch.Start();
-                TestFunction(seed, count);
-                stopwatch.Stop();
-                Debug.WriteLine("Ticks: " + stopwatch.ElapsedTicks + " ms: " + stopwatch.ElapsedMilliseconds);
-            }
-
-            Process.GetCurrentProcess().ProcessorAffinity =
-        new IntPtr(2); // Uses the second Core or Processor for the Test
-            Process.GetCurrentProcess().PriorityClass =
-        ProcessPriorityClass.High;      // Prevents "Normal" processes 
-                                        // from interrupting Threads
-            Thread.CurrentThread.Priority =
-        ThreadPriority.Highest;     // Prevents "Normal" Threads 
-                                    // from interrupting this thread
-
-            Debug.WriteLine(string.Empty);
-            Debug.WriteLine(string.Empty);
-            Debug.WriteLine("20 Tests with correct preparation");
-            Debug.WriteLine("Warmup");
-            //stopwatch.Reset();
-            //stopwatch.Start();
-            //while (stopwatch.ElapsedMilliseconds < 1200)  // A Warmup of 1000-1500 ms 
-            //{                                             // stabilizes the CPU cache and pipeline.
-            //    TestFunction(seed, count); // Warmup
-            //}
-            //stopwatch.Stop();
-
-            for (int repeat = 0; repeat < 20; ++repeat)
-            {
-                stopwatch.Reset();
-                stopwatch.Start();
-                TestFunction(seed, count);
-                stopwatch.Stop();
-                Debug.WriteLine("Ticks: " + stopwatch.ElapsedTicks + " ms: " + stopwatch.ElapsedMilliseconds);
-            }
-            Debug.WriteLine(result); // prevents optimizations (current compilers are 
-                                     // too silly to analyze the dataflow that deep, but we never know )
-        }
-
-        public static void TestFunction(long seed, int count)
-        {
-            using (var client = new WrapperClient())
-            {
-                client.Call<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[] { 5 });
-            }
         }
 
         [TestMethod, ExpectedException(typeof(ObjectDisposedException))]
@@ -163,7 +110,19 @@ namespace LegacyWrapperTest.Client
                 // Do Nothing
             }
 
-            client.Call<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[] { });
+            client.Invoke<TestStdCallDelegate>("TestDll.dll", "TestStdCall", new object[0]);
+        }
+
+        /// <summary>
+        /// The wrapper client should throw an ArgumentException when the generic type param is not a delegate
+        /// </summary>
+        [TestMethod, ExpectedException(typeof(ArgumentException))]
+        public void TestMustThrowArgumentException()
+        {
+            using (var client = new WrapperClient())
+            {
+                client.Invoke<object>(string.Empty, string.Empty, new object[0]);
+            }
         }
     }
 }

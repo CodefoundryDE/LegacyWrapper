@@ -18,7 +18,7 @@ namespace LegacyWrapperClient.Client
     public class WrapperClient : IDisposable
     {
         private bool _disposed;
-        private NamedPipeClientStream _pipe;
+        private readonly NamedPipeClientStream _pipe;
 
         public WrapperClient()
         {
@@ -41,10 +41,13 @@ namespace LegacyWrapperClient.Client
         /// <param name="args">Array of args to pass to the function.</param>
         /// <returns>Result object returned by the library.</returns>
         /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
-        public object Call<T>(string library, string function, object[] args) where T : class
+        public object Invoke<T>(string library, string function, object[] args) where T : class
         {
             if (_disposed)
                 throw new ObjectDisposedException(nameof(WrapperClient));
+
+            if (!typeof(T).IsSubclassOf(typeof(Delegate)))
+                throw new ArgumentException("Type parameter must be a delegate type.", nameof(T));
 
             var info = new CallData
             {
