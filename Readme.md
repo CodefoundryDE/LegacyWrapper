@@ -29,6 +29,10 @@ using (var client = new WrapperClient())
 * Support for Attributes like `[CallingConvention]`.
 * Type safe usage of generics in Call<T>-Method
 
+## Further reading
+
+View [this blog post](https://aluhut.codefoundry.de/programming/legacy-wrapper-invoking-an-unmanaged-32bit-library-out-of-a-64bit-process/) to obtain a basic understanding of how the library works internally.
+
 ## Contributing
 
 Feel free to submit any [suggestions/issues](https://github.com/CodefoundryDE/LegacyWrapper/issues) and contribute to LegacyWrapper.
