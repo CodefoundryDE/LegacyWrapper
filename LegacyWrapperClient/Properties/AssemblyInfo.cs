@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("LegacyWrapperClient")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("LegacyWrapper uses a x86 wrapper to call legacy dlls from a 64 bit process.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("codefoundry.de")]
 [assembly: AssemblyProduct("LegacyWrapperClient")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright (c) 2015, Franz Wimmer. (MIT License)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

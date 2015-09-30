@@ -25,7 +25,7 @@ namespace LegacyWrapperClient.Client
             string token = Guid.NewGuid().ToString();
 
             // Pass token to child process
-            Process.Start("LegacyWrapper", token);
+            Process.Start("Codefoundry.LegacyWrapper.exe", token);
 
             _pipe = new NamedPipeClientStream(".", token, PipeDirection.InOut);
             _pipe.Connect();
