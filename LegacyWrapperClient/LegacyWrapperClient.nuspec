@@ -2,6 +2,7 @@
 <package>
   <metadata>
     <id>Codefoundry.LegacyWrapper</id>
+    <title>Legacy Wrapper</title>
     <version>$version$</version>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -9,13 +10,14 @@
     <projectUrl>https://github.com/CodefoundryDE/LegacyWrapper</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>LegacyWrapper uses a x86 wrapper to call legacy dlls from a 64 bit process.</description>
+    <summary>Since you can't load a 32bit dll into a 64bit process, this wrapper utilizes a named pipe to abstract the call. You won't notice this though, because all the magic is hidden behind a single static method.</summary>
     <copyright>Copyright (c) 2015, Franz Wimmer. (MIT License)</copyright>
     <tags>LegacyWrapper LegacyWrapperClient dll library loader x86 x64 wrapper</tags>
   </metadata>
   <files>
-    <file src="bin\Release\*.dll" target="" /> 
-    <file src="bin\Release\*.pdb" target="" />
-    <file src="bin\Release\*.xml" target="" />
-    <file src="bin\Release\*.config" target="" />
+    <file src="bin\Release\*.dll" target="lib\net45" /> 
+    <file src="bin\Release\*.pdb" target="lib\net45" />
+    <file src="bin\Release\*.xml" target="lib\net45" />
+    <file src="bin\Release\*.config" target="lib\net45" />
   </files>  
 </package>
