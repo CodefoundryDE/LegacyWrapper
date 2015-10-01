@@ -64,7 +64,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dll\CallData.cs" />
     <Compile Include="ErrorHandling\LegacyWrapperException.cs" />
     <Compile Include="Interop\NativeLibrary.cs" />
     <Compile Include="Program.cs" />
@@ -85,6 +84,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LegacyWrapperClient\LegacyWrapperClient.csproj">
+      <Project>{cbba289f-8e61-4fea-8191-2794402c1333}</Project>
+      <Name>LegacyWrapperClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

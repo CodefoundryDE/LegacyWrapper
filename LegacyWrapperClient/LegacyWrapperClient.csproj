@@ -45,13 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client\WrapperClient.cs" />
+    <Compile Include="Dll\CallData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LegacyWrapper\LegacyWrapper.csproj">
-      <Project>{b7665a68-f19c-4539-9fe1-06b14ba774e3}</Project>
-      <Name>LegacyWrapper</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
