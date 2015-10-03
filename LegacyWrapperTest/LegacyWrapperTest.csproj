@@ -60,6 +60,10 @@
       <Project>{cbba289f-8e61-4fea-8191-2794402c1333}</Project>
       <Name>LegacyWrapperClient</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LegacyWrapper\LegacyWrapper.csproj">
+      <Project>{b7665a68-f19c-4539-9fe1-06b14ba774e3}</Project>
+      <Name>LegacyWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="TestLibrary\TestDll.dll">
