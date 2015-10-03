@@ -24,6 +24,10 @@ using (var client = new WrapperClient())
 }
 ```
 
+## NuGet Package
+
+NuGet package available here: [Codefoundry.LegacyWrapper @ nuget.org](https://www.nuget.org/packages/Codefoundry.LegacyWrapper/)
+
 ## Todo
 
 * Support for Attributes like `[CallingConvention]`.
