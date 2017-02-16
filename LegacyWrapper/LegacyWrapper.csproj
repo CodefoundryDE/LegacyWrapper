@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -89,9 +89,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LegacyWrapperClient\LegacyWrapperClient.csproj">
-      <Project>{cbba289f-8e61-4fea-8191-2794402c1333}</Project>
-      <Name>LegacyWrapperClient</Name>
+    <ProjectReference Include="..\LegacyWrapper.Common\LegacyWrapper.Common.csproj">
+      <Project>{B9E346E3-ED4F-4824-B780-825D87BE9D48}</Project>
+      <Name>LegacyWrapper.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

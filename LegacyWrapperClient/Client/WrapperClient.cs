@@ -11,7 +11,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using LegacyWrapperClient.Dll;
+using LegacyWrapper.Common.Serialization;
 
 namespace LegacyWrapperClient.Client
 {

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LegacyWrapperClient.Dll
+namespace LegacyWrapper.Common.Serialization
 {
     /// <summary>
     /// Class to transmit info to the server. The server will execute an appropriate call and eventually return the results.

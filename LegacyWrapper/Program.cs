@@ -11,7 +11,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LegacyWrapperClient.Dll;
+using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
 using LegacyWrapper.Interop;
 
