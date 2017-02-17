@@ -29,62 +29,78 @@ namespace LegacyWrapper
         /// The first parameter is expected to be a string.
         /// The Wrapper will use this string to create a named pipe.
         /// </param>
+        [HandleProcessCorruptedStateExceptions]
         static void Main(string[] args)
         {
-            if (args.Length < 1)
+            if (args.Length != 2)
             {
                 return;
             }
 
             string token = args[0];
+            string libraryName = args[1];
 
             // Create new named pipe with token from client
             using (var pipe = new NamedPipeServerStream(token, PipeDirection.InOut, 1, PipeTransmissionMode.Message))
             {
                 pipe.WaitForConnection();
 
-                // Receive CallData from client
-                CallData data;
-
-                while ((data = (CallData)Formatter.Deserialize(pipe)).Status != KeepAliveStatus.Close)
+                try
                 {
-                    LoadLibrary(data, pipe);
+                    CallData data = (CallData)Formatter.Deserialize(pipe);
+
+                    // Load requested library
+                    using (NativeLibrary library = NativeLibrary.Load(libraryName, NativeLibraryLoadOptions.SearchAll))
+                    {
+                        // Receive CallData from client
+                        
+                        while (data.Status != KeepAliveStatus.Close)
+                        {
+                            InvokeFunction(data, pipe, library);
+
+                            data = (CallData)Formatter.Deserialize(pipe);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    WriteExceptionToClient(pipe, e);
                 }
             }
         }
 
         [HandleProcessCorruptedStateExceptions]
-        private static void LoadLibrary(CallData data, Stream pipeStream)
+        private static void InvokeFunction(CallData data, Stream pipe, NativeLibrary library)
         {
             try
             {
-                // Load requested library
-                using (NativeLibrary library = NativeLibrary.Load(data.Library, NativeLibraryLoadOptions.SearchAll))
+                IntPtr func = library.GetFunctionPointer(data.ProcedureName);
+                Delegate method = Marshal.GetDelegateForFunctionPointer(func, data.Delegate);
+
+                // Invoke requested method
+                object result = method.DynamicInvoke(data.Parameters);
+
+                CallResult callResult = new CallResult
                 {
-                    IntPtr func = library.GetFunctionPointer(data.ProcedureName);
-                    Delegate method = Marshal.GetDelegateForFunctionPointer(func, data.Delegate);
+                    Result = result,
+                    Parameters = data.Parameters,
+                };
 
-                    // Invoke requested method
-                    object result = method.DynamicInvoke(data.Parameters);
-
-                    CallResult callResult = new CallResult
-                    {
-                        Result = result,
-                        Parameters = data.Parameters,
-                    };
-
-                    // Write result back to client
-                    Formatter.Serialize(pipeStream, callResult);
-                }
+                // Write result back to client
+                Formatter.Serialize(pipe, callResult);
             }
             catch (Exception e)
             {
-                // Write Exception to client
-                Formatter.Serialize(pipeStream, new CallResult
-                {
-                    Exception = new LegacyWrapperException("An error occured while calling a library function. See the inner exception for details.", e),
-                });
+                WriteExceptionToClient(pipe, e);
             }
+        }
+
+        private static void WriteExceptionToClient(Stream pipe, Exception e)
+        {
+            Formatter.Serialize(pipe, new CallResult
+            {
+                Exception = new LegacyWrapperException("An error occured while calling a library function. See the inner exception for details.", e),
+            });
         }
     }
 }

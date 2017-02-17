@@ -56,6 +56,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LegacyWrapper.Common\LegacyWrapper.Common.csproj">
+      <Project>{B9E346E3-ED4F-4824-B780-825D87BE9D48}</Project>
+      <Name>LegacyWrapper.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LegacyWrapperClient\LegacyWrapperClient.csproj">
       <Project>{cbba289f-8e61-4fea-8191-2794402c1333}</Project>
       <Name>LegacyWrapperClient</Name>

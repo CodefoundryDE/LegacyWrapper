@@ -14,11 +14,6 @@ namespace LegacyWrapper.Common.Serialization
         }
 
         /// <summary>
-        /// Name of the library to call.
-        /// </summary>
-        public string Library { get; set; }
-
-        /// <summary>
         /// Name of the procedure to call.
         /// </summary>
         public string ProcedureName { get; set; }

@@ -22,12 +22,17 @@ namespace LegacyWrapperClient.Client
         private readonly IFormatter _formatter;
         private readonly NamedPipeClientStream _pipe;
 
-        public WrapperClient()
+
+        /// <summary>
+        /// Creates a new WrapperClient instance.
+        /// </summary>
+        /// <param name="libraryName">Name of the library to load.</param>
+        public WrapperClient(string libraryName)
         {
             string token = Guid.NewGuid().ToString();
 
             // Pass token to child process
-            Process.Start("Codefoundry.LegacyWrapper.exe", token);
+            Process.Start("Codefoundry.LegacyWrapper.exe", $"{token} {libraryName}");
 
             _formatter = new BinaryFormatter();
 
@@ -45,7 +50,7 @@ namespace LegacyWrapperClient.Client
         /// <param name="args">Array of args to pass to the function.</param>
         /// <returns>Result object returned by the library.</returns>
         /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
-        public object Invoke<T>(string library, string function, object[] args) where T : class
+        public object Invoke<T>(string function, object[] args) where T : class
         {
             if (_disposed)
             {
@@ -59,7 +64,6 @@ namespace LegacyWrapperClient.Client
 
             var info = new CallData
             {
-                Library = library,
                 ProcedureName = function,
                 Parameters = args,
                 Delegate = typeof(T),
@@ -97,7 +101,10 @@ namespace LegacyWrapperClient.Client
         {
             var info = new CallData { Status = KeepAliveStatus.Close };
 
-            _formatter.Serialize(_pipe, info);
+            try
+            {
+                _formatter.Serialize(_pipe, info);
+            } catch { } // This means the wrapper eventually crashed and doesn't need a clean shutdown anyways
 
             if (_pipe.IsConnected)
             {
