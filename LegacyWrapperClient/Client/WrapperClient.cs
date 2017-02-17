@@ -21,7 +21,7 @@ namespace LegacyWrapperClient.Client
         private bool _disposed;
         private readonly IFormatter _formatter;
         private readonly NamedPipeClientStream _pipe;
-
+        private readonly Process _wrapperProcess;
 
         /// <summary>
         /// Creates a new WrapperClient instance.
@@ -32,7 +32,7 @@ namespace LegacyWrapperClient.Client
             string token = Guid.NewGuid().ToString();
 
             // Pass token and library name to child process
-            Process.Start("Codefoundry.LegacyWrapper.exe", $"{token} {libraryName}");
+            _wrapperProcess = Process.Start("Codefoundry.LegacyWrapper.exe", $"{token} {libraryName}");
 
             _formatter = new BinaryFormatter();
 
@@ -135,6 +135,7 @@ namespace LegacyWrapperClient.Client
             {
                 Close();
                 _pipe.Dispose();
+                _wrapperProcess.Dispose();
             }
 
             // Free any unmanaged objects here.
