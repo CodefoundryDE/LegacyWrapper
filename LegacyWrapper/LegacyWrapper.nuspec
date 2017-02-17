@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>LegacyWrapper uses a x86 wrapper to call legacy dlls from a 64 bit process.</description>
     <summary>Since you can't load a 32bit dll into a 64bit process, this wrapper utilizes a named pipe to abstract the call. You won't notice this though, because all the magic is hidden behind a single static method.</summary>
-    <copyright>Copyright (c) 2015, Franz Wimmer. (MIT License)</copyright>
+    <copyright>Copyright (c) 2017, Franz Wimmer. (MIT License)</copyright>
     <tags>LegacyWrapper LegacyWrapperClient dll library loader x86 x64 wrapper</tags>
   </metadata>
   <files>
