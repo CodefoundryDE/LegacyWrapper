@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -48,6 +49,7 @@ namespace LegacyWrapper
             }
         }
 
+        [HandleProcessCorruptedStateExceptions]
         private static void LoadLibrary(CallData data, IFormatter formatter, Stream pipeStream)
         {
             try
