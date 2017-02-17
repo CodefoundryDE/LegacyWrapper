@@ -45,7 +45,6 @@ namespace LegacyWrapperClient.Client
         /// Executes a call to a library.
         /// </summary>
         /// <typeparam name="T">Delegate Type to call.</typeparam>
-        /// <param name="library">Name of the library to load.</param>
         /// <param name="function">Name of the function to call.</param>
         /// <param name="args">Array of args to pass to the function.</param>
         /// <returns>Result object returned by the library.</returns>
