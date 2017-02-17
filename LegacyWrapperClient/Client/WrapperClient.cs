@@ -31,7 +31,7 @@ namespace LegacyWrapperClient.Client
         {
             string token = Guid.NewGuid().ToString();
 
-            // Pass token to child process
+            // Pass token and library name to child process
             Process.Start("Codefoundry.LegacyWrapper.exe", $"{token} {libraryName}");
 
             _formatter = new BinaryFormatter();
