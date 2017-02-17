@@ -5,6 +5,7 @@ using System.Dynamic;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Principal;
@@ -61,15 +62,25 @@ namespace LegacyWrapperClient.Client
             formatter.Serialize(_pipe, info);
 
             // Receive result from server
-            object result = formatter.Deserialize(_pipe);
+            CallResult callResult = (CallResult)formatter.Deserialize(_pipe);
 
-            var exception = result as Exception;
-            if (exception != null)
+            if (callResult.Exception != null)
             {
-                throw exception;
+                throw callResult.Exception;
             }
 
-            return result;
+            // Exchange ref params
+            if (args.Length != callResult.Parameters.Length)
+            {
+                throw new InvalidDataException("Returned parameters differ in length from passed parameters");
+            }
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                args[i] = callResult.Parameters[i];
+            }
+
+            return callResult.Result;
         }
 
         /// <summary>

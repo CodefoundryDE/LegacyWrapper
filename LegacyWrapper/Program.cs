@@ -61,15 +61,23 @@ namespace LegacyWrapper
                     // Invoke requested method
                     object result = method.DynamicInvoke(data.Parameters);
 
+                    CallResult callResult = new CallResult
+                    {
+                        Result = result,
+                        Parameters = data.Parameters,
+                    };
+
                     // Write result back to client
-                    formatter.Serialize(pipeStream, result);
+                    formatter.Serialize(pipeStream, callResult);
                 }
             }
             catch (Exception e)
             {
                 // Write Exception to client
-                formatter.Serialize(pipeStream, new LegacyWrapperException(
-                    "An error occured while calling a library function. See the inner exception for details.", e));
+                formatter.Serialize(pipeStream, new CallResult
+                {
+                    Exception = new LegacyWrapperException("An error occured while calling a library function. See the inner exception for details.", e),
+                });
             }
         }
     }

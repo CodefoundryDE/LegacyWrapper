@@ -30,6 +30,10 @@ namespace LegacyWrapperTest.Client
         private delegate string TestPCharHandlingDelegate(string param);
         private delegate string TestPWideCharHandlingDelegate(string param);
 
+        // These functions are expected to increment their parameters by 1
+        private delegate void TestVarParamHandling(ref int param);
+        private delegate void TestMultipleVarParamsHandling(ref int param1, ref int param2);
+
         [TestMethod]
         public void TestCallMethodWithoutException()
         {
@@ -123,6 +127,33 @@ namespace LegacyWrapperTest.Client
             using (var client = new WrapperClient())
             {
                 client.Invoke<object>(string.Empty, string.Empty, new object[0]);
+            }
+        }
+
+        [TestMethod]
+        public void TestRefParameterHandling()
+        {
+            object[] parameter = { 1337 };
+            using (var client = new WrapperClient())
+            {
+                client.Invoke<TestVarParamHandling>(TestDllPath, "TestVarParamHandling", parameter);
+
+                // Ref param should be incremented by 1
+                Assert.AreEqual(1338, parameter[0]);
+            }
+        }
+
+        [TestMethod]
+        public void TestMultipleRefParamsHandling()
+        {
+            object[] parameters = { 1337, 7777 };
+            using (var client = new WrapperClient())
+            {
+                client.Invoke<TestMultipleVarParamsHandling>(TestDllPath, "TestMultipleVarParamsHandling", parameters);
+
+                // Ref param should be incremented by 1
+                Assert.AreEqual(1338, parameters[0]);
+                Assert.AreEqual(7778, parameters[1]);
             }
         }
     }
