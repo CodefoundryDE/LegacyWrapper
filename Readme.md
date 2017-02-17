@@ -35,7 +35,7 @@ NuGet package available here: [Codefoundry.LegacyWrapper @ nuget.org](https://ww
 
 ## Further reading
 
-View [this blog post](https://aluhut.codefoundry.de/programming/legacy-wrapper-invoking-an-unmanaged-32bit-library-out-of-a-64bit-process/) to obtain a basic understanding of how the library works internally.
+View [this blog post](https://codefoundry.de/programming/2015/09/28/legacy-wrapper-invoking-an-unmanaged-32bit-library-out-of-a-64bit-process.html) to obtain a basic understanding of how the library works internally.
 
 ## Contributing
 
