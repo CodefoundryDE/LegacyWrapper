@@ -45,10 +45,14 @@ namespace LegacyWrapperClient.Client
         public object Invoke<T>(string library, string function, object[] args) where T : class
         {
             if (_disposed)
+            {
                 throw new ObjectDisposedException(nameof(WrapperClient));
+            }
 
             if (!typeof(T).IsSubclassOf(typeof(Delegate)))
+            {
                 throw new ArgumentException("Type parameter must be a delegate type.", nameof(T));
+            }
 
             var info = new CallData
             {
@@ -113,7 +117,9 @@ namespace LegacyWrapperClient.Client
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
+            {
                 return;
+            }
 
             if (disposing)
             {

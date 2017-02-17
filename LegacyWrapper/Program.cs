@@ -29,7 +29,10 @@ namespace LegacyWrapper
         /// </param>
         static void Main(string[] args)
         {
-            if (args.Length < 1) return;
+            if (args.Length < 1)
+            {
+                return;
+            }
 
             string token = args[0];
 
@@ -55,10 +58,10 @@ namespace LegacyWrapper
             try
             {
                 // Load requested library
-                using (var library = NativeLibrary.Load(data.Library, NativeLibraryLoadOptions.SearchAll))
+                using (NativeLibrary library = NativeLibrary.Load(data.Library, NativeLibraryLoadOptions.SearchAll))
                 {
                     IntPtr func = library.GetFunctionPointer(data.ProcedureName);
-                    var method = Marshal.GetDelegateForFunctionPointer(func, data.Delegate);
+                    Delegate method = Marshal.GetDelegateForFunctionPointer(func, data.Delegate);
 
                     // Invoke requested method
                     object result = method.DynamicInvoke(data.Parameters);
