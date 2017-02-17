@@ -19,6 +19,7 @@ namespace LegacyWrapperClient.Client
     public class WrapperClient : IDisposable
     {
         private bool _disposed;
+        private readonly IFormatter _formatter;
         private readonly NamedPipeClientStream _pipe;
 
         public WrapperClient()
@@ -27,6 +28,8 @@ namespace LegacyWrapperClient.Client
 
             // Pass token to child process
             Process.Start("Codefoundry.LegacyWrapper.exe", token);
+
+            _formatter = new BinaryFormatter();
 
             _pipe = new NamedPipeClientStream(".", token, PipeDirection.InOut);
             _pipe.Connect();
@@ -61,12 +64,12 @@ namespace LegacyWrapperClient.Client
                 Parameters = args,
                 Delegate = typeof(T),
             };
-            var formatter = new BinaryFormatter();
+
             // Write request to server
-            formatter.Serialize(_pipe, info);
+            _formatter.Serialize(_pipe, info);
 
             // Receive result from server
-            CallResult callResult = (CallResult)formatter.Deserialize(_pipe);
+            CallResult callResult = (CallResult)_formatter.Deserialize(_pipe);
 
             if (callResult.Exception != null)
             {
@@ -93,8 +96,8 @@ namespace LegacyWrapperClient.Client
         protected virtual void Close()
         {
             var info = new CallData { Status = KeepAliveStatus.Close };
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(_pipe, info);
+
+            _formatter.Serialize(_pipe, info);
 
             if (_pipe.IsConnected)
             {

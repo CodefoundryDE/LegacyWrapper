@@ -20,6 +20,8 @@ namespace LegacyWrapper
 {
     public class Program
     {
+        private static readonly IFormatter Formatter = new BinaryFormatter();
+
         /// <summary>
         /// Main method of the legacy dll wrapper.
         /// </summary>
@@ -42,18 +44,17 @@ namespace LegacyWrapper
                 pipe.WaitForConnection();
 
                 // Receive CallData from client
-                var formatter = new BinaryFormatter();
                 CallData data;
 
-                while ((data = (CallData)formatter.Deserialize(pipe)).Status != KeepAliveStatus.Close)
+                while ((data = (CallData)Formatter.Deserialize(pipe)).Status != KeepAliveStatus.Close)
                 {
-                    LoadLibrary(data, formatter, pipe);
+                    LoadLibrary(data, pipe);
                 }
             }
         }
 
         [HandleProcessCorruptedStateExceptions]
-        private static void LoadLibrary(CallData data, IFormatter formatter, Stream pipeStream)
+        private static void LoadLibrary(CallData data, Stream pipeStream)
         {
             try
             {
@@ -73,13 +74,13 @@ namespace LegacyWrapper
                     };
 
                     // Write result back to client
-                    formatter.Serialize(pipeStream, callResult);
+                    Formatter.Serialize(pipeStream, callResult);
                 }
             }
             catch (Exception e)
             {
                 // Write Exception to client
-                formatter.Serialize(pipeStream, new CallResult
+                Formatter.Serialize(pipeStream, new CallResult
                 {
                     Exception = new LegacyWrapperException("An error occured while calling a library function. See the inner exception for details.", e),
                 });
