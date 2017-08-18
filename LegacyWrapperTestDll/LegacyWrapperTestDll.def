@@ -1,0 +1,8 @@
+LIBRARY LegacyWrapperTestDll
+EXPORTS
+	TestStdCall
+	TestNormalFunc
+	TestPCharHandling
+	TestPWideCharHandling
+	TestVarParamHandling
+	TestMultipleVarParamsHandling

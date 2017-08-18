@@ -12,7 +12,7 @@ namespace LegacyWrapperTest.Client
     [TestClass]
     public class WrapperClientTest
     {
-        private const string TestDllPath = @"TestLibrary\TestDll.dll";
+        private const string TestDllPath = @"TestLibrary\LegacyWrapperTestDll32.dll";
 
         // We assume the following dll functions in our Test.dll here: 
         // Every function is supposed to return the input parameter unchanged.
@@ -69,9 +69,6 @@ namespace LegacyWrapperTest.Client
             Assert.AreEqual(input, result);
         }
 
-        /// <summary>
-        /// This will NOT work, since the dll function is not a stdcall function
-        /// </summary>
         [TestMethod]
         public void TestNormalFunc()
         {
@@ -83,7 +80,7 @@ namespace LegacyWrapperTest.Client
                 result = (int)client.Invoke<TestNormalFuncDelegate>("TestNormalFunc", new object[] { input });
             }
 
-            Assert.AreNotEqual(input, result);
+            Assert.AreEqual(input, result);
         }
 
         [TestMethod]
