@@ -12,9 +12,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LegacyWrapper.Common.Interop;
 using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
-using LegacyWrapper.Interop;
 
 namespace LegacyWrapper
 {
