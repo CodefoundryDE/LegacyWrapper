@@ -56,14 +56,6 @@
       <Project>{B9E346E3-ED4F-4824-B780-825D87BE9D48}</Project>
       <Name>LegacyWrapper.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LegacyWrapper32\LegacyWrapper32.csproj">
-      <Project>{b7665a68-f19c-4539-9fe1-06b14ba774e3}</Project>
-      <Name>LegacyWrapper32</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LegacyWrapper64\LegacyWrapper64.csproj">
-      <Project>{91df95e2-014e-406b-8eba-98c6b50f9840}</Project>
-      <Name>LegacyWrapper64</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
