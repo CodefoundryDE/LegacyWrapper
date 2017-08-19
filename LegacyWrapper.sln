@@ -7,8 +7,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapper64", "LegacyWrapper64\LegacyWrapper64.csproj", "{91DF95E2-014E-406B-8EBA-98C6B50F9840}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapperClient", "LegacyWrapperClient\LegacyWrapperClient.csproj", "{CBBA289F-8E61-4FEA-8191-2794402C1333}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B7665A68-F19C-4539-9FE1-06B14BA774E3} = {B7665A68-F19C-4539-9FE1-06B14BA774E3}
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840} = {91DF95E2-014E-406B-8EBA-98C6B50F9840}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapperTest", "LegacyWrapperTest\LegacyWrapperTest.csproj", "{93E6FBF2-3FC7-4770-9DDE-175025B5AA2C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B7665A68-F19C-4539-9FE1-06B14BA774E3} = {B7665A68-F19C-4539-9FE1-06B14BA774E3}
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840} = {91DF95E2-014E-406B-8EBA-98C6B50F9840}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{22EB660B-6C72-4378-BF0C-D8A85E0D33B3}"
 	ProjectSection(SolutionItems) = preProject
