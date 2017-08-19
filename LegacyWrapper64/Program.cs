@@ -1,7 +1,7 @@
-﻿using System.Runtime.ExceptionServices;
+using System.Runtime.ExceptionServices;
 using LegacyWrapper.Common.Wrapper;
 
-namespace LegacyWrapper
+namespace LegacyWrapper64
 {
     public class Program
     {

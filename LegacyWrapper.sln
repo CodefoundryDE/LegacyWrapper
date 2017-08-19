@@ -2,7 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapper", "LegacyWrapper\LegacyWrapper.csproj", "{B7665A68-F19C-4539-9FE1-06B14BA774E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapper32", "LegacyWrapper32\LegacyWrapper32.csproj", "{B7665A68-F19C-4539-9FE1-06B14BA774E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapper64", "LegacyWrapper64\LegacyWrapper64.csproj", "{91DF95E2-014E-406B-8EBA-98C6B50F9840}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapperClient", "LegacyWrapperClient\LegacyWrapperClient.csproj", "{CBBA289F-8E61-4FEA-8191-2794402C1333}"
 EndProject
@@ -41,6 +43,18 @@ Global
 		{B7665A68-F19C-4539-9FE1-06B14BA774E3}.Release|x64.Build.0 = Release|Any CPU
 		{B7665A68-F19C-4539-9FE1-06B14BA774E3}.Release|x86.ActiveCfg = Release|Any CPU
 		{B7665A68-F19C-4539-9FE1-06B14BA774E3}.Release|x86.Build.0 = Release|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Debug|x64.Build.0 = Debug|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Debug|x86.Build.0 = Debug|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Release|x64.ActiveCfg = Release|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Release|x64.Build.0 = Release|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Release|x86.ActiveCfg = Release|Any CPU
+		{91DF95E2-014E-406B-8EBA-98C6B50F9840}.Release|x86.Build.0 = Release|Any CPU
 		{CBBA289F-8E61-4FEA-8191-2794402C1333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBBA289F-8E61-4FEA-8191-2794402C1333}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBBA289F-8E61-4FEA-8191-2794402C1333}.Debug|x64.ActiveCfg = Debug|Any CPU
