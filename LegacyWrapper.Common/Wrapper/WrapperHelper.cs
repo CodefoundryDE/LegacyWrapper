@@ -1,36 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using LegacyWrapper.Common.Interop;
 using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
-using LegacyWrapper.Interop;
 
-namespace LegacyWrapper
+namespace LegacyWrapper.Common.Wrapper
 {
-    public class Program
+    public class WrapperHelper
     {
         private static readonly IFormatter Formatter = new BinaryFormatter();
 
         /// <summary>
-        /// Main method of the legacy dll wrapper.
+        /// Outsourced main method of the legacy dll wrapper.
         /// </summary>
         /// <param name="args">
         /// The first parameter is expected to be a string.
         /// The Wrapper will use this string to create a named pipe.
         /// </param>
         [HandleProcessCorruptedStateExceptions]
-        static void Main(string[] args)
+        public static void Call(string[] args)
         {
             if (args.Length != 2)
             {
@@ -53,7 +50,7 @@ namespace LegacyWrapper
                     using (NativeLibrary library = NativeLibrary.Load(libraryName, NativeLibraryLoadOptions.SearchAll))
                     {
                         // Receive CallData from client
-                        
+
                         while (data.Status != KeepAliveStatus.Close)
                         {
                             InvokeFunction(data, pipe, library);

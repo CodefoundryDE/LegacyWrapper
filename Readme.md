@@ -2,9 +2,9 @@
 
 ## About
 
-LegacyWrapper uses a x86 wrapper to call legacy dlls from a 64bit process.
+LegacyWrapper uses a wrapper process to call dlls from a process of the opposing architecture (X86 or AMD64).
 
-Since you can't load a 32bit dll into a 64bit process, this wrapper utilizes a named pipe to abstract the call. You won't notice this though, because all the magic is hidden behind a single static method.
+Since you can't load a dll of another architecture directly, the wrapper utilizes a named pipe to abstract the call. You won't notice this though, because all the magic is hidden behind a single static method.
 
 ## NuGet Package
 
@@ -28,9 +28,20 @@ using (var client = new WrapperClient("User32.dll"))
 }
 ```
 
+The constructor takes an optional second parameter where you can specify the target architecture (it defaults to X86):
+
+```csharp
+using (var client = new WrapperClient(TestDllPath, TargetArchitecture.Amd64))
+{
+    result = (int)client.Invoke<TestStdCallDelegate>("TestStdCall", new object[] { input });
+}
+```
+
+Please note that loading a 64bit dll will only work on 64bit operating systems.
+
 ### ref parameters
 
-If your delegate contains `ref` parameters, the object array passed as parameters to the `Invoke<T>` method will afterwards contain the updated values.
+If your delegate contains `ref` parameters, the object array passed as parameters to the `Invoke<T>` method will contain the updated values afterwards.
 
 ## Todo (maybe)
 

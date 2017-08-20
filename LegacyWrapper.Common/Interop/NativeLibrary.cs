@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using LegacyWrapper.ErrorHandling;
 
-namespace LegacyWrapper.Interop
+namespace LegacyWrapper.Common.Interop
 {
     /// <summary>
     /// Represents a native (unmanaged) dynamically loaded library.

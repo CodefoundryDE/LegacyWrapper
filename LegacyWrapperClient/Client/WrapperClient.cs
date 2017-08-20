@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
@@ -13,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LegacyWrapper.Common.Serialization;
+using LegacyWrapperClient.Architecture;
 
 namespace LegacyWrapperClient.Client
 {
@@ -23,16 +25,24 @@ namespace LegacyWrapperClient.Client
         private readonly NamedPipeClientStream _pipe;
         private readonly Process _wrapperProcess;
 
+        private readonly IReadOnlyDictionary<TargetArchitecture, string> WrapperNames = new Dictionary<TargetArchitecture, string>
+        {
+            { TargetArchitecture.X86,   "Codefoundry.LegacyWrapper32.exe" },
+            { TargetArchitecture.Amd64, "Codefoundry.LegacyWrapper64.exe" },
+        };
+
         /// <summary>
         /// Creates a new WrapperClient instance.
         /// </summary>
         /// <param name="libraryName">Name of the library to load.</param>
-        public WrapperClient(string libraryName)
+        /// <param name="targetArchitecture">Architecture of the library to load (X86 / AMD64). Defaults to X86.</param>
+        public WrapperClient(string libraryName, TargetArchitecture targetArchitecture = TargetArchitecture.X86)
         {
             string token = Guid.NewGuid().ToString();
 
+            string wrapperName = WrapperNames[targetArchitecture];
             // Pass token and library name to child process
-            _wrapperProcess = Process.Start("Codefoundry.LegacyWrapper.exe", $"{token} {libraryName}");
+            _wrapperProcess = Process.Start(wrapperName, $"{token} {libraryName}");
 
             _formatter = new BinaryFormatter();
 
@@ -103,7 +113,8 @@ namespace LegacyWrapperClient.Client
             try
             {
                 _formatter.Serialize(_pipe, info);
-            } catch { } // This means the wrapper eventually crashed and doesn't need a clean shutdown anyways
+            }
+            catch { } // This means the wrapper eventually crashed and doesn't need a clean shutdown anyways
 
             if (_pipe.IsConnected)
             {

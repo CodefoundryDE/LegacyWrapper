@@ -9,10 +9,10 @@
     <licenseUrl>https://github.com/CodefoundryDE/LegacyWrapper/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/CodefoundryDE/LegacyWrapper</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>LegacyWrapper uses a x86 wrapper to call legacy dlls from a 64 bit process.</description>
-    <summary>Since you can't load a 32bit dll into a 64bit process, this wrapper utilizes a named pipe to abstract the call. You won't notice this though, because all the magic is hidden behind a single static method.</summary>
+    <description>LegacyWrapper uses a wrapper process to call dlls from a process of the opposing architecture (X86 or AMD64).</description>
+    <summary>Since you can't load a dll of another architecture directly, the wrapper utilizes a named pipe to abstract the call. You won't notice this though, because all the magic is hidden behind a single static method.</summary>
     <copyright>Copyright (c) 2017, Franz Wimmer. (MIT License)</copyright>
-    <tags>LegacyWrapper LegacyWrapperClient dll library loader x86 x64 wrapper</tags>
+    <tags>LegacyWrapper LegacyWrapperClient dll library loader x86 x64 wrapper architecture</tags>
   </metadata>
   <files>
     <file src="bin\Release\*.exe" exclude="bin\Release\*.vshost*" target="lib\net45" />

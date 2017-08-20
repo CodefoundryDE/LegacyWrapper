@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
-[assembly: AssemblyDescription("LegacyWrapper uses a x86 wrapper to call legacy dlls from a 64 bit process.")]
+[assembly: AssemblyDescription("LegacyWrapper uses a wrapper process to call dlls from a process of the opposing architecture (X86 or AMD64).")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("codefoundry.de")]
 [assembly: AssemblyCopyright("Copyright (c) 2017, Franz Wimmer. (MIT License)")]
@@ -17,5 +17,5 @@ using System.Runtime.InteropServices;
 // COM aus zugreifen müssen, sollten Sie das ComVisible-Attribut für diesen Typ auf "True" festlegen.
 [assembly: ComVisible(false)]
 
-[assembly: AssemblyVersion("2.0.1.0")]
-[assembly: AssemblyFileVersion("2.0.1.0")]
+[assembly: AssemblyVersion("2.1.0.0")]
+[assembly: AssemblyFileVersion("2.1.0.0")]
