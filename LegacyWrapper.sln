@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapper32", "LegacyWrapper32\LegacyWrapper32.csproj", "{B7665A68-F19C-4539-9FE1-06B14BA774E3}"
 EndProject
@@ -20,6 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapperTest", "Legacy
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{22EB660B-6C72-4378-BF0C-D8A85E0D33B3}"
 	ProjectSection(SolutionItems) = preProject
+		Changelog.md = Changelog.md
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
 		LICENSE = LICENSE
 		Readme.md = Readme.md
@@ -112,5 +113,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {865DAD1E-AF9A-4000-BF74-465B2DA26804}
 	EndGlobalSection
 EndGlobal
