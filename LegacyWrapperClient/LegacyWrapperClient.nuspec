@@ -15,10 +15,10 @@
     <tags>LegacyWrapper LegacyWrapperClient dll library loader x86 x64 wrapper</tags>
   </metadata>
   <files>
-    <file src="..\bin\Release\*.exe" exclude="..\bin\Release\*.vshost*" target="lib\net45" />
-    <file src="..\bin\Release\*.dll" target="lib\net45" /> 
-    <file src="..\bin\Release\*.pdb" target="lib\net45" />
-    <file src="..\bin\Release\*.xml" target="lib\net45" />
-    <file src="..\bin\Release\*.config" exclude="..\bin\Release\*.vshost*" target="lib\net45" />
+    <file src="bin\Release\*.exe" exclude="bin\Release\*.vshost*" target="lib\net45" />
+    <file src="bin\Release\*.dll" target="lib\net45" /> 
+    <file src="bin\Release\*.pdb" target="lib\net45" />
+    <file src="bin\Release\*.xml" target="lib\net45" />
+    <file src="bin\Release\*.config" exclude="bin\Release\*.vshost*" target="lib\net45" />
   </files>  
 </package>
