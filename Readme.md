@@ -50,7 +50,7 @@ If your delegate contains `ref` parameters, the object array passed as parameter
 
 ## Further reading
 
-View [this blog post](https://codefoundry.de/programming/2015/09/28/legacy-wrapper-invoking-an-unmanaged-32bit-library-out-of-a-64bit-process.html) to obtain a basic understanding of how the library works internally.
+View [this blog post](https://codefoundry.de/programming/2015/09/28/legacy-wrapper-invoking-an-unmanaged-32bit-library-out-of-a-64bit-process.html) to obtain a basic understanding of how the library works internally. [There is also a blog post about the new 64bit feature in LegacyWrapper 2.1](https://codefoundry.de/programming/2017/08/20/legacywrapper-2-1-is-out.html).
 
 ## Contributing
 
