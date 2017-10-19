@@ -6,6 +6,7 @@ using System.Threading;
 using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
+using LegacyWrapperClient.DynamicProxy;
 using LegacyWrapperTest.Interface;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -14,7 +15,6 @@ namespace LegacyWrapperTest.Client
     [TestClass]
     public class WrapperClientTest
     {
-        private string TestDllPath;
         private TargetArchitecture ArchitectureToLoad;
 
         /// <summary>
@@ -28,21 +28,22 @@ namespace LegacyWrapperTest.Client
             if (Environment.Is64BitProcess)
             {
                 ArchitectureToLoad = TargetArchitecture.X86;
-                TestDllPath = @"TestLibrary\LegacyWrapperTestDll32.dll";
+                WrapperClientInterceptor.OverrideLibraryName = @"TestLibrary\LegacyWrapperTestDll32.dll";
             }
             else
             {
                 ArchitectureToLoad = TargetArchitecture.Amd64;
-                TestDllPath = @"TestLibrary\LegacyWrapperTestDll64.dll";
+                WrapperClientInterceptor.OverrideLibraryName = @"TestLibrary\LegacyWrapperTestDll64.dll";
             }
         }
 
         [TestMethod]
         public void TestCallMethodWithoutException()
         {
+            WrapperClientInterceptor.OverrideLibraryName = null;
             // Create new WrapperClient
             // Remember to ensure a call to the Dispose()-Method!
-            using (var client = WrapperClientFactory<IUser32Dll>.CreateWrapperClient("User32.dll", ArchitectureToLoad))
+            using (var client = WrapperClientFactory<IUser32Dll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 // Make calls providing library name, function name, and parameters
                 int x = client.GetSystemMetrics(0);
@@ -57,7 +58,7 @@ namespace LegacyWrapperTest.Client
 
             int result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 result = client.TestStdCall(input);
             }
@@ -72,7 +73,7 @@ namespace LegacyWrapperTest.Client
 
             int result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 result = client.TestNormalFunc(input);
             }
@@ -87,7 +88,7 @@ namespace LegacyWrapperTest.Client
 
             string result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 result = client.TestPCharHandling(input);
             }
@@ -102,7 +103,7 @@ namespace LegacyWrapperTest.Client
 
             string result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 result = client.TestPWideCharHandling(input);
             }
@@ -114,7 +115,7 @@ namespace LegacyWrapperTest.Client
         public void TestMustThrowObjectDisposedException()
         {
             ITestDll client;
-            using (client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad))
+            using (client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 // Do Nothing
             }
@@ -126,7 +127,7 @@ namespace LegacyWrapperTest.Client
         public void TestRefParameterHandling()
         {
             int parameter = 1337;
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 client.TestVarParamHandling(ref parameter);
             }
@@ -141,7 +142,7 @@ namespace LegacyWrapperTest.Client
             int param1 = 1337;
             int param2 = 7777;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 client.TestMultipleVarParamsHandling(ref param1, ref param2);
             }
@@ -156,7 +157,7 @@ namespace LegacyWrapperTest.Client
         {
             int parameter = 1337;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 client.TestVarParamHandling(ref parameter);
                 client.TestVarParamHandling(ref parameter);
@@ -169,7 +170,7 @@ namespace LegacyWrapperTest.Client
         [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
         public void TestLoadNonExistingLibrary()
         {
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient("DummyLibraryName.dll", ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 client.TestNonExistingLibrary();
             }
@@ -178,7 +179,7 @@ namespace LegacyWrapperTest.Client
         [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
         public void TestLoadNonExistingFunction()
         {
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
             {
                 client.TestNonExistingFunction();
             }

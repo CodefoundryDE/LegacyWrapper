@@ -10,7 +10,7 @@ namespace LegacyWrapper.Common.Attributes
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public class LegacyDllImportAttribute : Attribute
     {
-        public string LibraryName { get; private set; }
+        public string LibraryName { get; set; }
         public CallingConvention CallingConvention { get; set; }
         public CharSet CharSet { get; set; }
 

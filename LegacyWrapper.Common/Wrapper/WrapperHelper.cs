@@ -33,13 +33,12 @@ namespace LegacyWrapper.Common.Wrapper
         [HandleProcessCorruptedStateExceptions]
         public static void Call(string[] args)
         {
-            if (args.Length != 2)
+            if (args.Length != 1)
             {
                 return;
             }
 
             string token = args[0];
-            string libraryName = args[1];
 
             // Create new named pipe with token from client
             using (var pipe = new NamedPipeServerStream(token, PipeDirection.InOut, 1, PipeTransmissionMode.Message))
@@ -56,7 +55,7 @@ namespace LegacyWrapper.Common.Wrapper
 
                     while (data.Status != KeepAliveStatus.Close)
                     {
-                        InvokeFunction(libraryName, data, pipe);
+                        InvokeFunction(data, pipe);
 
                         data = (CallData)Formatter.Deserialize(pipe);
                     }
@@ -69,9 +68,9 @@ namespace LegacyWrapper.Common.Wrapper
         }
 
         [HandleProcessCorruptedStateExceptions]
-        private static void InvokeFunction(string libraryName, CallData data, Stream pipe)
+        private static void InvokeFunction(CallData data, Stream pipe)
         {
-            Type dllHandle = CreateTypeBuilder(libraryName, data);
+            Type dllHandle = CreateTypeBuilder(data);
 
             // Invoke requested method
             object result = dllHandle.GetMethod(data.ProcedureName)
@@ -87,7 +86,7 @@ namespace LegacyWrapper.Common.Wrapper
             Formatter.Serialize(pipe, callResult);
         }
 
-        private static Type CreateTypeBuilder(string libraryName, CallData callData)
+        private static Type CreateTypeBuilder(CallData callData)
         {
             AssemblyName asmName = new AssemblyName("LegacyWrapper");
             AssemblyBuilder asmBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.Run);
@@ -96,7 +95,7 @@ namespace LegacyWrapper.Common.Wrapper
 
             MethodBuilder pinvokeBuilder = typeBuilder.DefinePInvokeMethod(
                 name: callData.ProcedureName,
-                dllName: libraryName,
+                dllName: callData.LibraryName,
                 attributes: MethodAttributes.Static | MethodAttributes.Public | MethodAttributes.PinvokeImpl,
                 callingConvention: CallingConventions.Standard,
                 returnType: callData.ReturnType,

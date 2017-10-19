@@ -33,10 +33,10 @@ namespace LegacyWrapperClient.Client
         /// <param name="libraryName">Name of the library to load.</param>
         /// <param name="targetArchitecture">Architecture of the library to load (X86 / AMD64). Defaults to X86.</param>
         /// <returns>Returns a new instance of TFunctions.</returns>
-        public static TFunctions CreateWrapperClient(string libraryName, TargetArchitecture targetArchitecture = TargetArchitecture.X86)
+        public static TFunctions CreateWrapperClient(TargetArchitecture targetArchitecture = TargetArchitecture.X86)
         {
             IProxyGenerator generator = new ProxyGenerator(new PersistentProxyBuilder());
-            IInterceptor interceptor = new WrapperClientInterceptor(libraryName, targetArchitecture);
+            IInterceptor interceptor = new WrapperClientInterceptor(targetArchitecture);
 
             return generator.CreateInterfaceProxyWithoutTarget<TFunctions>(interceptor);
         }

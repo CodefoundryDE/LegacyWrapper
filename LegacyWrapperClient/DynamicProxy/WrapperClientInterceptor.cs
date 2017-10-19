@@ -13,13 +13,19 @@ namespace LegacyWrapperClient.DynamicProxy
 {
     internal class WrapperClientInterceptor : IInterceptor
     {
+        /// <summary>
+        /// This is an internal Property that is used for testing purposes.
+        /// </summary>
+        internal static string OverrideLibraryName = null;
+
+
         private bool _isDisposed = false;
 
         private readonly WrapperClient _wrapperClient;
 
-        public WrapperClientInterceptor(string libraryName, TargetArchitecture targetArchitecture)
+        public WrapperClientInterceptor(TargetArchitecture targetArchitecture)
         {
-            _wrapperClient = new WrapperClient(libraryName, targetArchitecture);
+            _wrapperClient = new WrapperClient(targetArchitecture);
         }
 
         public void Intercept(IInvocation invocation)
@@ -46,6 +52,11 @@ namespace LegacyWrapperClient.DynamicProxy
             }
 
             var attribute = (LegacyDllImportAttribute)invocation.Method.GetCustomAttributes(typeof(LegacyDllImportAttribute), false).Single();
+
+            if (OverrideLibraryName != null)
+            {
+                attribute.LibraryName = OverrideLibraryName;
+            }
 
             invocation.ReturnValue = _wrapperClient.InvokeInternal(methodName, parameters, parameterTypes, returnType, attribute);
         }
