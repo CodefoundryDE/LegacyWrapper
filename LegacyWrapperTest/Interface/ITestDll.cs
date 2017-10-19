@@ -21,7 +21,7 @@ namespace LegacyWrapperTest.Interface
     // procedure TestVarParamHandling(var AParam: Integer); stdcall;      
     // procedure TestMultipleVarParamsHandling(var AParam1: Integer; var AParam2: Integer); stdcall;
 
-    public interface ITestDll
+    public interface ITestDll : IDisposable
     {
         [LegacyDllImport("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
         int TestStdCall(int AParam);

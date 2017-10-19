@@ -16,7 +16,7 @@ namespace LegacyWrapperClient.Client
     /// WrapperClientFactory provides a method to generate a new proxy instance to the wrapper executable.
     /// </summary>
     /// <typeparam name="TFunctions">Interface type to use for calls to the DLL.</typeparam>
-    public static class WrapperClientFactory<TFunctions> where TFunctions : class
+    public static class WrapperClientFactory<TFunctions> where TFunctions : class, IDisposable
     {
         static WrapperClientFactory()
         {

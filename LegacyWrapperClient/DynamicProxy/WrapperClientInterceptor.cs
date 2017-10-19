@@ -11,8 +11,10 @@ using LegacyWrapperClient.Client;
 
 namespace LegacyWrapperClient.DynamicProxy
 {
-    internal class WrapperClientInterceptor : IInterceptor, IDisposable
+    internal class WrapperClientInterceptor : IInterceptor
     {
+        private bool _isDisposed = false;
+
         private readonly WrapperClient _wrapperClient;
 
         public WrapperClientInterceptor(string libraryName, TargetArchitecture targetArchitecture)
@@ -22,7 +24,18 @@ namespace LegacyWrapperClient.DynamicProxy
 
         public void Intercept(IInvocation invocation)
         {
+            AssertIsNotDesposed();
+
             string methodName = invocation.Method.Name;
+
+            // Early out if it'a call to Dispose()
+            if (methodName == nameof(IDisposable.Dispose))
+            {
+                _wrapperClient.Dispose();
+                _isDisposed = true;
+                return;
+            }
+
             object[] parameters = invocation.Arguments;
             Type[] parameterTypes = invocation.Method.GetParameters().Select(x => x.ParameterType).ToArray();
             Type returnType = invocation.Method.ReturnType;
@@ -37,25 +50,12 @@ namespace LegacyWrapperClient.DynamicProxy
             invocation.ReturnValue = _wrapperClient.InvokeInternal(methodName, parameters, parameterTypes, returnType, attribute);
         }
 
-        #region IDisposable-Implementation
-        protected virtual void Dispose(bool disposing)
+        private void AssertIsNotDesposed()
         {
-            if (disposing)
+            if (_isDisposed)
             {
-                _wrapperClient?.Dispose();
+                throw new ObjectDisposedException(nameof(_wrapperClient));
             }
         }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~WrapperClientInterceptor()
-        {
-            Dispose(false);
-        }
-        #endregion
     }
 }
