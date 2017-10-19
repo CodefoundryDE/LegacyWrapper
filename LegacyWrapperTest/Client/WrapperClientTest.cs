@@ -6,6 +6,7 @@ using System.Threading;
 using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
+using LegacyWrapperTest.Interface;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LegacyWrapperTest.Client
@@ -69,12 +70,12 @@ namespace LegacyWrapperTest.Client
         {
             // Create new WrapperClient
             // Remember to ensure a call to the Dispose()-Method!
-            using (var client = new WrapperClient("User32.dll", ArchitectureToLoad))
-            {
-                // Make calls providing library name, function name, and parameters
-                int x = (int)client.Invoke<GetSystemMetrics>("GetSystemMetrics", new object[] { 0 });
-                int y = (int)client.Invoke<GetSystemMetrics>("GetSystemMetrics", new object[] { 1 });
-            }
+            var client = WrapperClientFactory<IUser32Dll>.CreateWrapperClient("User32.dll", ArchitectureToLoad);
+
+            // Make calls providing library name, function name, and parameters
+            int x = client.GetSystemMetrics(0);
+            int y = client.GetSystemMetrics(1);
+
         }
 
         [TestMethod]
@@ -83,10 +84,10 @@ namespace LegacyWrapperTest.Client
             int input = 5;
 
             int result;
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                result = (int)client.Invoke<TestStdCallDelegate>("TestStdCall", new object[] { input });
-            }
+
+            var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad);
+
+            result = client.TestStdCall(input);
 
             Assert.AreEqual(input, result);
         }
@@ -97,10 +98,10 @@ namespace LegacyWrapperTest.Client
             int input = 5;
 
             int result;
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                result = (int)client.Invoke<TestNormalFuncDelegate>("TestNormalFunc", new object[] { input });
-            }
+
+            var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad);
+
+            result = client.TestNormalFunc(input);
 
             Assert.AreEqual(input, result);
         }
@@ -111,10 +112,10 @@ namespace LegacyWrapperTest.Client
             string input = "Hello World";
 
             string result;
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                result = (string)client.Invoke<TestPCharHandlingDelegate>("TestPCharHandling", new object[] { input });
-            }
+
+            var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad);
+
+            result = client.TestPCharHandling(input);
 
             Assert.AreEqual(input, result);
         }
@@ -125,104 +126,83 @@ namespace LegacyWrapperTest.Client
             string input = "Hello World";
 
             string result;
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                result = (string)client.Invoke<TestPWideCharHandlingDelegate>("TestPWideCharHandling", new object[] { input });
-            }
+
+            var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad);
+
+            result = client.TestPWideCharHandling(input);
 
             Assert.AreEqual(input, result);
         }
 
-        [TestMethod, ExpectedException(typeof(ObjectDisposedException))]
-        public void TestMustThrowObjectDisposedException()
-        {
-            WrapperClient client;
-            using (client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                // Do Nothing
-            }
+        //[TestMethod, ExpectedException(typeof(ObjectDisposedException))]
+        //public void TestMustThrowObjectDisposedException()
+        //{
+        //    WrapperClient client;
+        //    using (client = new WrapperClient(TestDllPath, ArchitectureToLoad))
+        //    {
+        //        // Do Nothing
+        //    }
 
-            client.Invoke<TestStdCallDelegate>("TestStdCall", new object[0]);
-        }
-
-        /// <summary>
-        /// The wrapper client should throw an ArgumentException when the generic type param is not a delegate
-        /// </summary>
-        [TestMethod, ExpectedException(typeof(ArgumentException))]
-        public void TestMustThrowArgumentException()
-        {
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                client.Invoke<object>(string.Empty, new object[0]);
-            }
-        }
+        //    client.Invoke<TestStdCallDelegate>("TestStdCall", new object[0]);
+        //}
 
         [TestMethod]
         public void TestRefParameterHandling()
         {
-            object[] parameter = { 1337 };
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                client.Invoke<TestVarParamHandling>("TestVarParamHandling", parameter);
+            int parameter = 1337;
+            var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad);
 
-                // Ref param should be incremented by 1
-                Assert.AreEqual(1338, parameter[0]);
-            }
+            client.TestVarParamHandling(ref parameter);
+
+            // Ref param should be incremented by 1
+            Assert.AreEqual(1338, parameter);
+
         }
 
         [TestMethod]
         public void TestMultipleRefParamsHandling()
         {
-            object[] parameters = { 1337, 7777 };
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                client.Invoke<TestMultipleVarParamsHandling>("TestMultipleVarParamsHandling", parameters);
+            int param1 = 1337;
+            int param2 = 7777;
 
-                // Ref param should be incremented by 1
-                Assert.AreEqual(1338, parameters[0]);
-                Assert.AreEqual(7778, parameters[1]);
-            }
+            var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad);
+
+            client.TestMultipleVarParamsHandling(ref param1, ref param2);
+
+            // Ref param should be incremented by 1
+            Assert.AreEqual(1338, param1);
+            Assert.AreEqual(7778, param2);
         }
 
         [TestMethod]
         public void TestCallLibraryMultipleTimes()
         {
-            object[] parameter = { 1337 };
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                client.Invoke<TestVarParamHandling>("TestVarParamHandling", parameter);
-                client.Invoke<TestVarParamHandling>("TestVarParamHandling", parameter);
+            int parameter = 1337;
 
-                // Ref param should be incremented by 1
-                Assert.AreEqual(1339, parameter[0]);
-            }
-        }
+            var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad);
 
-        [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
-        public void TestWrongRefParameterHandling()
-        {
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                client.Invoke<TestWrongVarParamHandling>("TestVarParamHandling", new object[0]);
-            }
+            client.TestVarParamHandling(ref parameter);
+            client.TestVarParamHandling(ref parameter);
+
+            // Ref param should be incremented by 1
+            Assert.AreEqual(1339, parameter);
+
         }
 
         [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
         public void TestLoadNonExistingLibrary()
         {
-            using (var client = new WrapperClient(Guid.NewGuid().ToString(), ArchitectureToLoad))
-            {
-                client.Invoke<TestWrongVarParamHandling>("DummyMethod", new object[0]);
-            }
+            var client = WrapperClientFactory<ITestDll>.CreateWrapperClient("DummyLibraryName.dll", ArchitectureToLoad);
+
+            client.TestNonExistingLibrary();
         }
 
         [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
         public void TestLoadNonExistingFunction()
         {
-            using (var client = new WrapperClient(TestDllPath, ArchitectureToLoad))
-            {
-                client.Invoke<TestWrongVarParamHandling>("DummyMethod", new object[0]);
-            }
+            var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(TestDllPath, ArchitectureToLoad);
+
+            client.TestNonExistingFunction();
         }
     }
 }

@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using LegacyWrapper.Common.Interop;
@@ -47,16 +51,14 @@ namespace LegacyWrapper.Common.Wrapper
                     CallData data = (CallData)Formatter.Deserialize(pipe);
 
                     // Load requested library
-                    using (NativeLibrary library = NativeLibrary.Load(libraryName, NativeLibraryLoadOptions.SearchAll))
+
+                    // Receive CallData from client
+
+                    while (data.Status != KeepAliveStatus.Close)
                     {
-                        // Receive CallData from client
+                        InvokeFunction(libraryName, data, pipe);
 
-                        while (data.Status != KeepAliveStatus.Close)
-                        {
-                            InvokeFunction(data, pipe, library);
-
-                            data = (CallData)Formatter.Deserialize(pipe);
-                        }
+                        data = (CallData)Formatter.Deserialize(pipe);
                     }
                 }
                 catch (Exception e)
@@ -67,29 +69,44 @@ namespace LegacyWrapper.Common.Wrapper
         }
 
         [HandleProcessCorruptedStateExceptions]
-        private static void InvokeFunction(CallData data, Stream pipe, NativeLibrary library)
+        private static void InvokeFunction(string libraryName, CallData data, Stream pipe)
         {
-            try
+            Type dllHandle = CreateTypeBuilder(libraryName, data);
+
+            // Invoke requested method
+            object result = dllHandle.GetMethod(data.ProcedureName)
+                                     .Invoke(null, data.Parameters);
+
+            CallResult callResult = new CallResult
             {
-                IntPtr func = library.GetFunctionPointer(data.ProcedureName);
-                Delegate method = Marshal.GetDelegateForFunctionPointer(func, data.Delegate);
+                Result = result,
+                Parameters = data.Parameters,
+            };
 
-                // Invoke requested method
-                object result = method.DynamicInvoke(data.Parameters);
+            // Write result back to client
+            Formatter.Serialize(pipe, callResult);
+        }
 
-                CallResult callResult = new CallResult
-                {
-                    Result = result,
-                    Parameters = data.Parameters,
-                };
+        private static Type CreateTypeBuilder(string libraryName, CallData callData)
+        {
+            AssemblyName asmName = new AssemblyName("LegacyWrapper");
+            AssemblyBuilder asmBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.Run);
+            ModuleBuilder modBuilder = asmBuilder.DefineDynamicModule("LegacyWrapper", emitSymbolInfo: false);
+            TypeBuilder typeBuilder = modBuilder.DefineType("LegacyWrapper.WrapperType", TypeAttributes.Class | TypeAttributes.Public);
 
-                // Write result back to client
-                Formatter.Serialize(pipe, callResult);
-            }
-            catch (Exception e)
-            {
-                WriteExceptionToClient(pipe, e);
-            }
+            MethodBuilder pinvokeBuilder = typeBuilder.DefinePInvokeMethod(
+                name: callData.ProcedureName,
+                dllName: libraryName,
+                attributes: MethodAttributes.Static | MethodAttributes.Public | MethodAttributes.PinvokeImpl,
+                callingConvention: CallingConventions.Standard,
+                returnType: callData.ReturnType,
+                parameterTypes: callData.ParameterTypes,
+                nativeCallConv: callData.CallingConvention,
+                nativeCharSet: callData.CharSet);
+
+            pinvokeBuilder.SetImplementationFlags(pinvokeBuilder.GetMethodImplementationFlags() | MethodImplAttributes.PreserveSig);
+
+            return typeBuilder.CreateType();
         }
 
         private static void WriteExceptionToClient(Stream pipe, Exception e)

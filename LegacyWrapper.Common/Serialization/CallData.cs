@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using LegacyWrapper.Common.Attributes;
 
 namespace LegacyWrapper.Common.Serialization
 {
@@ -13,6 +15,8 @@ namespace LegacyWrapper.Common.Serialization
             Status = KeepAliveStatus.KeepAlive;
         }
 
+        public string LibraryName { get; set; }
+
         /// <summary>
         /// Name of the procedure to call.
         /// </summary>
@@ -23,10 +27,16 @@ namespace LegacyWrapper.Common.Serialization
         /// </summary>
         public object[] Parameters { get; set; }
 
+        public Type[] ParameterTypes { get; set; }
+
         /// <summary>
-        /// Delegate type to use for the call.
+        /// Type of the called function's return value
         /// </summary>
-        public Type Delegate { get; set; }
+        public Type ReturnType { get; set; }
+
+        public CallingConvention CallingConvention { get; set; }
+
+        public CharSet CharSet { get; set; }
 
         /// <summary>
         /// Status indicating if the wrapper executable should close the connection and terminate itself

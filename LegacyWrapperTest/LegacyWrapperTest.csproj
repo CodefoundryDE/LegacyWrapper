@@ -53,6 +53,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Client\WrapperClientTest.cs" />
+    <Compile Include="Interface\ITestDll.cs" />
+    <Compile Include="Interface\IUser32Dll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
