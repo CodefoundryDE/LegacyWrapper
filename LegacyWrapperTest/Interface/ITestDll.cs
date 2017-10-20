@@ -23,36 +23,36 @@ namespace LegacyWrapperTest.Interface
 
     public interface ITestDll : IDisposable
     {
-        [LegacyDllImport("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
+        [LegacyDllMethod("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
         int TestStdCall(int AParam);
 
-        [LegacyDllImport("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
+        [LegacyDllMethod("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
         int TestNormalFunc(int AParam);
 
-        [LegacyDllImport("TestDll.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        [LegacyDllMethod("TestDll.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         string TestPCharHandling(string AParam);
 
-        [LegacyDllImport("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
+        [LegacyDllMethod("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
         string TestPWideCharHandling(string AParam);
 
         // These procedures are expected to increment their parameters by 1:
 
-        [LegacyDllImport("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
+        [LegacyDllMethod("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
         void TestVarParamHandling(ref int AParam);
 
-        [LegacyDllImport("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
+        [LegacyDllMethod("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
         void TestMultipleVarParamsHandling(ref int AParam1, ref int AParam2);
 
         /// <summary>
         /// This Method exists to test how the WrapperClient handles a non existent library.
         /// </summary>
-        [LegacyDllImport("TestNonExistingLibrary.dll", CallingConvention = CallingConvention.StdCall)]
+        [LegacyDllMethod("TestNonExistingLibrary.dll", CallingConvention = CallingConvention.StdCall)]
         void TestNonExistingLibrary();
 
         /// <summary>
         /// This Method exists to test how the WrapperClient handles a non existent function.
         /// </summary>
-        [LegacyDllImport("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
+        [LegacyDllMethod("TestDll.dll", CallingConvention = CallingConvention.StdCall)]
         void TestNonExistingFunction();
     }
 }

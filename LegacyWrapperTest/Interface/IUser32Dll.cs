@@ -10,7 +10,7 @@ namespace LegacyWrapperTest.Interface
 {
     public interface IUser32Dll : IDisposable
     {
-        [LegacyDllImport("User32.dll", CallingConvention = CallingConvention.Winapi)]
+        [LegacyDllMethod("User32.dll", CallingConvention = CallingConvention.Winapi)]
         int GetSystemMetrics(int nIndex);
     }
 }

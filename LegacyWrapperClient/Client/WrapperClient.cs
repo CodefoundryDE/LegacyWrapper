@@ -61,7 +61,7 @@ namespace LegacyWrapperClient.Client
         /// <param name="legacyDllImportAttribute">[LegacyDllImport] attribute taken from the method definition.</param>
         /// <returns>Result object returned by the library.</returns>
         /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
-        internal object InvokeInternal(string procedureName, object[] parameters, Type[] parameterTypes, Type returnType, LegacyDllImportAttribute legacyDllImportAttribute)
+        internal object InvokeInternal(string procedureName, object[] parameters, Type[] parameterTypes, Type returnType, LegacyDllMethodAttribute legacyDllImportAttribute)
         {
             AssertNotDisposed();
             

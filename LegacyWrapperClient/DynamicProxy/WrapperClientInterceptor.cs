@@ -51,7 +51,7 @@ namespace LegacyWrapperClient.DynamicProxy
                 throw new LegacyWrapperException($"Interface method {methodName} must contain exactly one [LegacyDllImport] attribute!");
             }
 
-            var attribute = (LegacyDllImportAttribute)invocation.Method.GetCustomAttributes(typeof(LegacyDllImportAttribute), false).Single();
+            var attribute = (LegacyDllMethodAttribute)invocation.Method.GetCustomAttributes(typeof(LegacyDllMethodAttribute), false).Single();
 
             if (OverrideLibraryName != null)
             {

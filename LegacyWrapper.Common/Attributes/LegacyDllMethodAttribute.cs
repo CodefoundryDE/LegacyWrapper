@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace LegacyWrapper.Common.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-    public class LegacyDllImportAttribute : Attribute
+    public class LegacyDllMethodAttribute : Attribute
     {
         public string LibraryName { get; set; }
         public CallingConvention CallingConvention { get; set; }
         public CharSet CharSet { get; set; }
 
-        public LegacyDllImportAttribute(string libraryName)
+        public LegacyDllMethodAttribute(string libraryName)
         {
             LibraryName = libraryName;
             CallingConvention = CallingConvention.StdCall;
