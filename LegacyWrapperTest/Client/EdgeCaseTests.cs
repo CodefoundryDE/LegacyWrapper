@@ -12,7 +12,7 @@ namespace LegacyWrapperTest.Client
         [ExpectedException(typeof(ArgumentException))]
         public void TestTypeIsNotAnInterface()
         {
-            // Test a random class that's derrived from IDisposable but not an interface
+            // Test a random class that's derived from IDisposable but not an interface
             using (WrapperClientFactory<HttpListener>.CreateWrapperClient())
             {
                 // Do nothing
