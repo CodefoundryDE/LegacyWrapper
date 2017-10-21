@@ -54,6 +54,7 @@ namespace LegacyWrapperClient.Client
         /// <summary>
         /// Executes a call to a library.
         /// </summary>
+        /// <param name="libraryName">Name of the library to load.</param>
         /// <param name="procedureName">Name of the function to call.</param>
         /// <param name="parameters">Array of args to pass to the function.</param>
         /// <param name="parameterTypes">Array of args to pass to the function.</param>
@@ -61,13 +62,13 @@ namespace LegacyWrapperClient.Client
         /// <param name="legacyDllImportAttribute">[LegacyDllImport] attribute taken from the method definition.</param>
         /// <returns>Result object returned by the library.</returns>
         /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
-        internal object InvokeInternal(string procedureName, object[] parameters, Type[] parameterTypes, Type returnType, LegacyDllMethodAttribute legacyDllImportAttribute)
+        internal object InvokeInternal(string libraryName, string procedureName, object[] parameters, Type[] parameterTypes, Type returnType, LegacyDllMethodAttribute legacyDllImportAttribute)
         {
             AssertNotDisposed();
             
             var info = new CallData
             {
-                LibraryName = legacyDllImportAttribute.LibraryName,
+                LibraryName = libraryName,
                 ProcedureName = procedureName,
                 Parameters = parameters,
                 ParameterTypes = parameterTypes,

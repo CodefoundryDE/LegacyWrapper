@@ -36,7 +36,7 @@ namespace LegacyWrapperClient.Client
         public static TFunctions CreateWrapperClient(TargetArchitecture targetArchitecture = TargetArchitecture.X86)
         {
             IProxyGenerator generator = new ProxyGenerator(new PersistentProxyBuilder());
-            IInterceptor interceptor = new WrapperClientInterceptor(targetArchitecture);
+            IInterceptor interceptor = new WrapperClientInterceptor(typeof(TFunctions), targetArchitecture);
 
             return generator.CreateInterfaceProxyWithoutTarget<TFunctions>(interceptor);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
@@ -22,10 +23,12 @@ namespace LegacyWrapperClient.DynamicProxy
         private bool _isDisposed = false;
 
         private readonly WrapperClient _wrapperClient;
+        private readonly Type _interfaceType;
 
-        public WrapperClientInterceptor(TargetArchitecture targetArchitecture)
+        public WrapperClientInterceptor(Type interfaceType, TargetArchitecture targetArchitecture)
         {
             _wrapperClient = new WrapperClient(targetArchitecture);
+            _interfaceType = interfaceType;
         }
 
         public void Intercept(IInvocation invocation)
@@ -46,19 +49,34 @@ namespace LegacyWrapperClient.DynamicProxy
             Type[] parameterTypes = invocation.Method.GetParameters().Select(x => x.ParameterType).ToArray();
             Type returnType = invocation.Method.ReturnType;
 
-            if (invocation.Method.CustomAttributes.Count() != 1)
+            var dllImportAttributes = ExtractAttributesFromType<LegacyDllImportAttribute>(_interfaceType);
+            if (dllImportAttributes.Length != 1)
             {
-                throw new LegacyWrapperException($"Interface method {methodName} must contain exactly one [LegacyDllImport] attribute!");
+                throw new LegacyWrapperException();
             }
+            LegacyDllImportAttribute dllImportAttribute = dllImportAttributes[0];
 
-            var attribute = (LegacyDllMethodAttribute)invocation.Method.GetCustomAttributes(typeof(LegacyDllMethodAttribute), false).Single();
+            var dllMethodAttributes = ExtractAttributesFromType<LegacyDllMethodAttribute>(invocation.Method);
+            if (dllMethodAttributes.Length != 1)
+            {
+                throw new LegacyWrapperException();
+            }
+            LegacyDllMethodAttribute dllMethodAttribute = dllMethodAttributes[0];
 
+            string libraryName = dllImportAttribute.LibraryName;
             if (OverrideLibraryName != null)
             {
-                attribute.LibraryName = OverrideLibraryName;
+                libraryName = OverrideLibraryName;
             }
 
-            invocation.ReturnValue = _wrapperClient.InvokeInternal(methodName, parameters, parameterTypes, returnType, attribute);
+            invocation.ReturnValue = _wrapperClient.InvokeInternal(libraryName, methodName, parameters, parameterTypes, returnType, dllMethodAttribute);
+        }
+
+        private static T[] ExtractAttributesFromType<T>(ICustomAttributeProvider attributeProvider)
+        {
+            return attributeProvider.GetCustomAttributes(typeof(T), false)
+                .Cast<T>()
+                .ToArray();
         }
 
         private void AssertIsNotDesposed()

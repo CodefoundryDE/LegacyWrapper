@@ -41,11 +41,12 @@ namespace LegacyWrapperTest.Client
         public void TestCallMethodWithoutException()
         {
             WrapperClientInterceptor.OverrideLibraryName = null;
-            // Create new WrapperClient
+
+            // Create new Wrapper client providing the proxy interface
             // Remember to ensure a call to the Dispose()-Method!
             using (var client = WrapperClientFactory<IUser32Dll>.CreateWrapperClient(ArchitectureToLoad))
             {
-                // Make calls providing library name, function name, and parameters
+                // Make calls - it's that simple!
                 int x = client.GetSystemMetrics(0);
                 int y = client.GetSystemMetrics(1);
             }

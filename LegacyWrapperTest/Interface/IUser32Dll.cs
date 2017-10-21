@@ -8,9 +8,10 @@ using LegacyWrapper.Common.Attributes;
 
 namespace LegacyWrapperTest.Interface
 {
+    [LegacyDllImport("User32.dll")]
     public interface IUser32Dll : IDisposable
     {
-        [LegacyDllMethod("User32.dll", CallingConvention = CallingConvention.Winapi)]
+        [LegacyDllMethod(CallingConvention = CallingConvention.Winapi)]
         int GetSystemMetrics(int nIndex);
     }
 }

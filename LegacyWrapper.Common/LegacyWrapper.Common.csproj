@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\LegacyDllImportAttribute.cs" />
     <Compile Include="Attributes\LegacyDllMethodAttribute.cs" />
     <Compile Include="ErrorHandling\LegacyWrapperException.cs" />
     <Compile Include="Interop\NativeLibrary.cs" />
