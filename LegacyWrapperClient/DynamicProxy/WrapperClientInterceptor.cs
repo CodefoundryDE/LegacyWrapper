@@ -15,7 +15,7 @@ namespace LegacyWrapperClient.DynamicProxy
     /// <summary>
     /// Interceptor to receive calls to a proxy generated from an interface.
     /// </summary>
-    internal class WrapperClientInterceptor : IInterceptor
+    internal class WrapperClientInterceptor : IInterceptor, IDisposable
     {
         /// <summary>
         /// This is an internal Property that is used for testing purposes.
@@ -88,5 +88,37 @@ namespace LegacyWrapperClient.DynamicProxy
                 throw new ObjectDisposedException(nameof(_wrapperClient));
             }
         }
+
+        #region IDisposable-Pattern
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _wrapperClient.Dispose();
+                // Free any other managed objects here.
+                //
+            }
+
+            // Free any unmanaged objects here.
+            //
+            _isDisposed = true;
+        }
+
+        ~WrapperClientInterceptor()
+        {
+            Dispose(false);
+        }
+        #endregion
     }
 }
