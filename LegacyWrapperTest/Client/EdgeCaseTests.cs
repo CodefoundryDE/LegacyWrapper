@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Net;
+using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Client;
+using LegacyWrapperTest.Interface;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LegacyWrapperTest.Client
 {
     [TestClass]
-    public class EdgeCaseTests
+    public class EdgeCaseTests : LegacyWrapperTestBase
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
@@ -17,6 +19,36 @@ namespace LegacyWrapperTest.Client
             {
                 // Do nothing
             }
+        }
+
+        [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
+        public void TestLoadNonExistingLibrary()
+        {
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            {
+                client.TestNonExistingLibrary();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
+        public void TestLoadNonExistingFunction()
+        {
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            {
+                client.TestNonExistingFunction();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(ObjectDisposedException))]
+        public void TestMustThrowObjectDisposedException()
+        {
+            ITestDll client;
+            using (client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            {
+                // Do nothing
+            }
+
+            client.TestStdCall(0);
         }
     }
 }

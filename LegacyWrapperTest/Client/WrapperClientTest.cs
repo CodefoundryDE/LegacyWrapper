@@ -13,30 +13,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LegacyWrapperTest.Client
 {
     [TestClass]
-    public class WrapperClientTest
+    public class WrapperClientTest : LegacyWrapperTestBase
     {
-        private TargetArchitecture ArchitectureToLoad;
-
-        /// <summary>
-        /// Here we're going to determine if we're running as 32 bit or 64 bit process - and use the opposing wrapper.
-        /// However, there's no way to tell Visual Studio or ReSharper that they should run unit tests on both architectures - 
-        /// we have to do that manually.
-        /// </summary>
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            if (Environment.Is64BitProcess)
-            {
-                ArchitectureToLoad = TargetArchitecture.X86;
-                WrapperClientInterceptor.OverrideLibraryName = @"TestLibrary\LegacyWrapperTestDll32.dll";
-            }
-            else
-            {
-                ArchitectureToLoad = TargetArchitecture.Amd64;
-                WrapperClientInterceptor.OverrideLibraryName = @"TestLibrary\LegacyWrapperTestDll64.dll";
-            }
-        }
-
         [TestMethod]
         public void TestCallMethodWithoutException()
         {
@@ -112,18 +90,6 @@ namespace LegacyWrapperTest.Client
             Assert.AreEqual(input, result);
         }
 
-        [TestMethod, ExpectedException(typeof(ObjectDisposedException))]
-        public void TestMustThrowObjectDisposedException()
-        {
-            ITestDll client;
-            using (client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
-            {
-                // Do Nothing
-            }
-
-            client.TestStdCall(0);
-        }
-
         [TestMethod]
         public void TestRefParameterHandling()
         {
@@ -168,22 +134,6 @@ namespace LegacyWrapperTest.Client
             Assert.AreEqual(1339, parameter);
         }
 
-        [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
-        public void TestLoadNonExistingLibrary()
-        {
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
-            {
-                client.TestNonExistingLibrary();
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
-        public void TestLoadNonExistingFunction()
-        {
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
-            {
-                client.TestNonExistingFunction();
-            }
-        }
+        
     }
 }
