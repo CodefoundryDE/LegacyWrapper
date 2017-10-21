@@ -50,5 +50,23 @@ namespace LegacyWrapperTest.Client
 
             client.TestStdCall(0);
         }
+
+        [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
+        public void TestInterfaceContainsNoAttribute()
+        {
+            using (var client = WrapperClientFactory<ITestDllWithoutAttribute>.CreateWrapperClient())
+            {
+                client.MethodWithAttribute();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
+        public void TestMethodContainsNoAttribute()
+        {
+            using (var client = WrapperClientFactory<ITestDllWithAttribute>.CreateWrapperClient())
+            {
+                client.MethodWithoutAttribute();
+            }
+        }
     }
 }

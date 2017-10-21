@@ -56,4 +56,16 @@ namespace LegacyWrapperTest.Interface
         [LegacyDllMethod(CallingConvention = CallingConvention.StdCall)]
         void TestNonExistingFunction();
     }
+
+    public interface ITestDllWithoutAttribute : IDisposable
+    {
+        [LegacyDllMethod]
+        void MethodWithAttribute();
+    }
+
+    [LegacyDllImport("User32.dll")]
+    public interface ITestDllWithAttribute : IDisposable
+    {
+        void MethodWithoutAttribute();
+    }
 }

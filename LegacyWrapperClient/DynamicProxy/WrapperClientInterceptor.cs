@@ -51,19 +51,8 @@ namespace LegacyWrapperClient.DynamicProxy
             Type[] parameterTypes = invocation.Method.GetParameters().Select(x => x.ParameterType).ToArray();
             Type returnType = invocation.Method.ReturnType;
 
-            var dllImportAttributes = ExtractAttributesFromType<LegacyDllImportAttribute>(_interfaceType);
-            if (dllImportAttributes.Length != 1)
-            {
-                throw new LegacyWrapperException();
-            }
-            LegacyDllImportAttribute dllImportAttribute = dllImportAttributes[0];
-
-            var dllMethodAttributes = ExtractAttributesFromType<LegacyDllMethodAttribute>(invocation.Method);
-            if (dllMethodAttributes.Length != 1)
-            {
-                throw new LegacyWrapperException();
-            }
-            LegacyDllMethodAttribute dllMethodAttribute = dllMethodAttributes[0];
+            var dllImportAttribute = GetLegacyAttribute<LegacyDllImportAttribute>(_interfaceType, $"{_interfaceType.Name} must contain exactly one [LegacyDllImport] attribute.");
+            var dllMethodAttribute = GetLegacyAttribute<LegacyDllMethodAttribute>(invocation.Method, $"{invocation.Method.Name} must contain exactlly one [LegacyDllMethod] attribute.");
 
             string libraryName = dllImportAttribute.LibraryName;
             if (OverrideLibraryName != null)
@@ -74,11 +63,17 @@ namespace LegacyWrapperClient.DynamicProxy
             invocation.ReturnValue = _wrapperClient.InvokeInternal(libraryName, methodName, parameters, parameterTypes, returnType, dllMethodAttribute);
         }
 
-        private static T[] ExtractAttributesFromType<T>(ICustomAttributeProvider attributeProvider)
+        private static T GetLegacyAttribute<T>(ICustomAttributeProvider attributeProvider, string message)
         {
-            return attributeProvider.GetCustomAttributes(typeof(T), false)
+            var dllImportAttributes = attributeProvider.GetCustomAttributes(typeof(T), false)
                 .Cast<T>()
                 .ToArray();
+
+            if (dllImportAttributes.Length != 1)
+            {
+                throw new LegacyWrapperException(message);
+            }
+            return dllImportAttributes[0];
         }
 
         private void AssertIsNotDesposed()
