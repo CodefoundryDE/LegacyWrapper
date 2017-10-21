@@ -23,6 +23,7 @@ namespace LegacyWrapperClient.Client
         /// All calls will be proxied over a named pipe to the wrapper executable.
         /// </summary>
         /// <param name="targetArchitecture">Architecture of the library to load (X86 / AMD64). Defaults to X86.</param>
+        /// <exception cref="ArgumentException">An ArgumentException is thrown if the supplied generic type parameter is not an interface.</exception>
         /// <returns>Returns a new instance of TFunctions.</returns>
         public static TFunctions CreateWrapperClient(TargetArchitecture targetArchitecture = TargetArchitecture.X86)
         {
