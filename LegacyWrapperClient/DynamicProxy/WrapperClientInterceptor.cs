@@ -12,13 +12,15 @@ using LegacyWrapperClient.Client;
 
 namespace LegacyWrapperClient.DynamicProxy
 {
+    /// <summary>
+    /// Interceptor to receive calls to a proxy generated from an interface.
+    /// </summary>
     internal class WrapperClientInterceptor : IInterceptor
     {
         /// <summary>
         /// This is an internal Property that is used for testing purposes.
         /// </summary>
         internal static string OverrideLibraryName = null;
-
 
         private bool _isDisposed = false;
 
