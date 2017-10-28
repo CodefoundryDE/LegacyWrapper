@@ -63,7 +63,7 @@ namespace LegacyWrapperClient.DynamicProxy
             invocation.ReturnValue = _wrapperClient.InvokeInternal(libraryName, methodName, parameters, parameterTypes, returnType, dllMethodAttribute);
         }
 
-        private static T GetLegacyAttribute<T>(ICustomAttributeProvider attributeProvider, string message)
+        private static T GetLegacyAttribute<T>(Type attributeProvider, string message) where T : Attribute
         {
             var dllImportAttributes = attributeProvider.GetCustomAttributes(typeof(T), false)
                 .Cast<T>()
@@ -71,7 +71,7 @@ namespace LegacyWrapperClient.DynamicProxy
 
             if (dllImportAttributes.Length != 1)
             {
-                throw new LegacyWrapperException(message);
+                throw new LegacyWrapperException($"{attributeProvider.Name} must contain exactly one {typeof(T).Name}");
             }
             return dllImportAttributes[0];
         }
