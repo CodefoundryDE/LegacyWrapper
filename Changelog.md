@@ -1,6 +1,42 @@
 # LegacyWrapper Changelog
 
-## Version 3.0 [20. Aug 2017]
+## Version 3.0 [tbd]
+
+**LegacyWrapper 3.0 is a major rewrite and not backwards compatible to prior versions.**
+
+*   The old `Invoke<TDelegate>()` method has been replaced by a much simpler and more type-safe pattern:
+
+```csharp
+// Define a proxy interface with matching method names and signatures
+// The interface must be derived from IDisposable!
+public interface IUser32Dll : IDisposable
+{
+    [LegacyDllImport("User32.dll", CallingConvention = CallingConvention.Winapi)]
+    int GetSystemMetrics(int nIndex);
+}
+
+// Create new Wrapper client providing the proxy interface
+// Remember to ensure a call to the Dispose()-Method!
+using (var client = WrapperClientFactory<IUser32Dll>.CreateWrapperClient())
+{
+    // Make calls - it's that simple!
+    int x = client.GetSystemMetrics(0);
+    int y = client.GetSystemMetrics(1);
+}
+```
+
+Therefore, there is _no longer_ the need to:
+* Create a `delegate`
+* Cast result values
+* Pass function parameters as array of `object`
+* Supply the method name as magic string
+
+Other things that changed:
+
+*   Documentation on classes and methods has been improved
+*   There are more unit tests now (especially edge cases)
+
+## Version 2.1 [20. Aug 2017]
 
 * It is now possible to load 64bit libraries in a 32bit process:
 
