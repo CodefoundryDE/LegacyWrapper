@@ -51,8 +51,8 @@ namespace LegacyWrapperClient.DynamicProxy
             Type[] parameterTypes = invocation.Method.GetParameters().Select(x => x.ParameterType).ToArray();
             Type returnType = invocation.Method.ReturnType;
 
-            var dllImportAttribute = GetLegacyAttribute<LegacyDllImportAttribute>(_interfaceType, $"{_interfaceType.Name} must contain exactly one [LegacyDllImport] attribute.");
-            var dllMethodAttribute = GetLegacyAttribute<LegacyDllMethodAttribute>(invocation.Method, $"{invocation.Method.Name} must contain exactlly one [LegacyDllMethod] attribute.");
+            var dllImportAttribute = GetLegacyAttribute<LegacyDllImportAttribute>(_interfaceType);
+            var dllMethodAttribute = GetLegacyAttribute<LegacyDllMethodAttribute>(invocation.Method);
 
             string libraryName = dllImportAttribute.LibraryName;
             if (OverrideLibraryName != null)
@@ -63,7 +63,7 @@ namespace LegacyWrapperClient.DynamicProxy
             invocation.ReturnValue = _wrapperClient.InvokeInternal(libraryName, methodName, parameters, parameterTypes, returnType, dllMethodAttribute);
         }
 
-        private static T GetLegacyAttribute<T>(Type attributeProvider, string message) where T : Attribute
+        private static T GetLegacyAttribute<T>(MemberInfo attributeProvider) where T : Attribute
         {
             var dllImportAttributes = attributeProvider.GetCustomAttributes(typeof(T), false)
                 .Cast<T>()
