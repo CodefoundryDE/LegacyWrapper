@@ -52,7 +52,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Client\EdgeCaseTests.cs" />
+    <Compile Include="Client\LegacyWrapperTestBase.cs" />
     <Compile Include="Client\WrapperClientTest.cs" />
+    <Compile Include="Interface\ITestDll.cs" />
+    <Compile Include="Interface\IUser32Dll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

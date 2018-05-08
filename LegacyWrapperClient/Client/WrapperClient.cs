@@ -13,12 +13,13 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LegacyWrapper.Common.Attributes;
 using LegacyWrapper.Common.Serialization;
 using LegacyWrapperClient.Architecture;
 
 namespace LegacyWrapperClient.Client
 {
-    public class WrapperClient : IDisposable
+    internal class WrapperClient : IDisposable
     {
         private bool _disposed;
         private readonly IFormatter _formatter;
@@ -34,15 +35,14 @@ namespace LegacyWrapperClient.Client
         /// <summary>
         /// Creates a new WrapperClient instance.
         /// </summary>
-        /// <param name="libraryName">Name of the library to load.</param>
         /// <param name="targetArchitecture">Architecture of the library to load (X86 / AMD64). Defaults to X86.</param>
-        public WrapperClient(string libraryName, TargetArchitecture targetArchitecture = TargetArchitecture.X86)
+        public WrapperClient(TargetArchitecture targetArchitecture = TargetArchitecture.X86)
         {
             string token = Guid.NewGuid().ToString();
 
             string wrapperName = WrapperNames[targetArchitecture];
             // Pass token and library name to child process
-            _wrapperProcess = Process.Start(wrapperName, $"{token} {libraryName}");
+            _wrapperProcess = Process.Start(wrapperName, token);
 
             _formatter = new BinaryFormatter();
 
@@ -54,28 +54,27 @@ namespace LegacyWrapperClient.Client
         /// <summary>
         /// Executes a call to a library.
         /// </summary>
-        /// <typeparam name="T">Delegate Type to call.</typeparam>
-        /// <param name="function">Name of the function to call.</param>
-        /// <param name="args">Array of args to pass to the function.</param>
+        /// <param name="libraryName">Name of the library to load.</param>
+        /// <param name="procedureName">Name of the function to call.</param>
+        /// <param name="parameters">Array of args to pass to the function.</param>
+        /// <param name="parameterTypes">Array of args to pass to the function.</param>
+        /// <param name="returnType">Return type of the function.</param>
+        /// <param name="legacyDllImportAttribute">[LegacyDllImport] attribute taken from the method definition.</param>
         /// <returns>Result object returned by the library.</returns>
         /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
-        public object Invoke<T>(string function, object[] args) where T : class
+        internal object InvokeInternal(string libraryName, string procedureName, object[] parameters, Type[] parameterTypes, Type returnType, LegacyDllMethodAttribute legacyDllImportAttribute)
         {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(nameof(WrapperClient));
-            }
-
-            if (!typeof(T).IsSubclassOf(typeof(Delegate)))
-            {
-                throw new ArgumentException("Type parameter must be a delegate type.", nameof(T));
-            }
-
+            AssertNotDisposed();
+            
             var info = new CallData
             {
-                ProcedureName = function,
-                Parameters = args,
-                Delegate = typeof(T),
+                LibraryName = libraryName,
+                ProcedureName = procedureName,
+                Parameters = parameters,
+                ParameterTypes = parameterTypes,
+                ReturnType = returnType,
+                CallingConvention = legacyDllImportAttribute.CallingConvention,
+                CharSet = legacyDllImportAttribute.CharSet,
             };
 
             // Write request to server
@@ -89,18 +88,31 @@ namespace LegacyWrapperClient.Client
                 throw callResult.Exception;
             }
 
-            // Exchange ref params
-            if (args.Length != callResult.Parameters.Length)
-            {
-                throw new InvalidDataException("Returned parameters differ in length from passed parameters");
-            }
+            AssertLengthOfArgsEquals(parameters, callResult.Parameters);
 
-            for (int i = 0; i < args.Length; i++)
+            for (int i = 0; i < parameters.Length; i++)
             {
-                args[i] = callResult.Parameters[i];
+                parameters[i] = callResult.Parameters[i];
             }
 
             return callResult.Result;
+        }
+
+        private void AssertNotDisposed()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(WrapperClient));
+            }
+        }
+
+        private void AssertLengthOfArgsEquals(object[] originalArgs, object[] callResultParamters)
+        {
+            // Exchange ref params
+            if (originalArgs.Length != callResultParamters.Length)
+            {
+                throw new InvalidDataException("Returned parameters differ in length from passed parameters");
+            }
         }
 
         /// <summary>

@@ -16,7 +16,7 @@
   </metadata>
   <files>
     <file src="bin\Release\*.exe" exclude="bin\Release\*.vshost*" target="lib\net45" />
-    <file src="bin\Release\*.dll" target="lib\net45" /> 
+    <file src="bin\Release\*.dll" exclude="bin\Release\Castle.Core.dll" target="lib\net45" /> 
     <file src="bin\Release\*.pdb" target="lib\net45" />
     <file src="bin\Release\*.xml" target="lib\net45" />
     <file src="bin\Release\*.config" exclude="bin\Release\*.vshost*" target="lib\net45" />
