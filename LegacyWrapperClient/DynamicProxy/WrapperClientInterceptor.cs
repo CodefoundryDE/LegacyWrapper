@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using LegacyWrapper.Common.Attributes;
+using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
@@ -35,19 +36,15 @@ namespace LegacyWrapperClient.DynamicProxy
 
         public void Intercept(IInvocation invocation)
         {
-            AssertIsNotDesposed();
-
-            string methodName = invocation.Method.Name;
+            AssertIsNotDisposed();
 
             // Early out if it'a call to Dispose()
-            if (methodName == nameof(IDisposable.Dispose))
+            if (invocation.Method.Name == nameof(IDisposable.Dispose))
             {
-                _wrapperClient.Dispose();
-                _isDisposed = true;
+                Dispose();
                 return;
             }
 
-            object[] parameters = invocation.Arguments;
             Type[] parameterTypes = invocation.Method.GetParameters().Select(x => x.ParameterType).ToArray();
             Type returnType = invocation.Method.ReturnType;
 
@@ -60,7 +57,18 @@ namespace LegacyWrapperClient.DynamicProxy
                 libraryName = OverrideLibraryName;
             }
 
-            invocation.ReturnValue = _wrapperClient.InvokeInternal(libraryName, methodName, parameters, parameterTypes, returnType, dllMethodAttribute);
+            var callData = new CallData
+            {
+                LibraryName = libraryName,
+                ProcedureName = invocation.Method.Name,
+                Parameters = invocation.Arguments,
+                ParameterTypes = parameterTypes,
+                ReturnType = returnType,
+                CallingConvention = dllMethodAttribute.CallingConvention,
+                CharSet = dllMethodAttribute.CharSet,
+            };
+
+            invocation.ReturnValue = _wrapperClient.InvokeInternal(callData);
         }
 
         private static T GetLegacyAttribute<T>(MemberInfo attributeProvider) where T : Attribute
@@ -76,7 +84,7 @@ namespace LegacyWrapperClient.DynamicProxy
             return dllImportAttributes[0];
         }
 
-        private void AssertIsNotDesposed()
+        private void AssertIsNotDisposed()
         {
             if (_isDisposed)
             {

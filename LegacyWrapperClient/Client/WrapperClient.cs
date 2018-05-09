@@ -54,31 +54,15 @@ namespace LegacyWrapperClient.Client
         /// <summary>
         /// Executes a call to a library.
         /// </summary>
-        /// <param name="libraryName">Name of the library to load.</param>
-        /// <param name="procedureName">Name of the function to call.</param>
-        /// <param name="parameters">Array of args to pass to the function.</param>
-        /// <param name="parameterTypes">Array of args to pass to the function.</param>
-        /// <param name="returnType">Return type of the function.</param>
-        /// <param name="legacyDllImportAttribute">[LegacyDllImport] attribute taken from the method definition.</param>
+        /// <param name="callData"><see cref="CallData">CallData</see> object with information about invocation.</param>
         /// <returns>Result object returned by the library.</returns>
         /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
-        internal object InvokeInternal(string libraryName, string procedureName, object[] parameters, Type[] parameterTypes, Type returnType, LegacyDllMethodAttribute legacyDllImportAttribute)
+        internal object InvokeInternal(CallData callData)
         {
             AssertNotDisposed();
             
-            var info = new CallData
-            {
-                LibraryName = libraryName,
-                ProcedureName = procedureName,
-                Parameters = parameters,
-                ParameterTypes = parameterTypes,
-                ReturnType = returnType,
-                CallingConvention = legacyDllImportAttribute.CallingConvention,
-                CharSet = legacyDllImportAttribute.CharSet,
-            };
-
             // Write request to server
-            _formatter.Serialize(_pipe, info);
+            _formatter.Serialize(_pipe, callData);
 
             // Receive result from server
             CallResult callResult = (CallResult)_formatter.Deserialize(_pipe);
@@ -88,11 +72,11 @@ namespace LegacyWrapperClient.Client
                 throw callResult.Exception;
             }
 
-            AssertLengthOfArgsEquals(parameters, callResult.Parameters);
+            AssertLengthOfArgsEquals(callData.Parameters, callResult.Parameters);
 
-            for (int i = 0; i < parameters.Length; i++)
+            for (int i = 0; i < callData.Parameters.Length; i++)
             {
-                parameters[i] = callResult.Parameters[i];
+                callData.Parameters[i] = callResult.Parameters[i];
             }
 
             return callResult.Result;
