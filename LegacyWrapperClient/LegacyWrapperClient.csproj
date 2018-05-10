@@ -51,6 +51,9 @@
     <Compile Include="Architecture\TargetArchitecture.cs" />
     <Compile Include="Client\WrapperClient.cs" />
     <Compile Include="Client\WrapperClientFactory.cs" />
+    <Compile Include="Configuration\IWrapperConfig.cs" />
+    <Compile Include="Configuration\WrapperConfig.cs" />
+    <Compile Include="Configuration\WrapperConfigBuilder.cs" />
     <Compile Include="DynamicProxy\WrapperClientInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\GlobalAssemblyInfo.cs">

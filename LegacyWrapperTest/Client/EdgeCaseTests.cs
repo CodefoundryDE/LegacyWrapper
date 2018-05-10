@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net;
 using LegacyWrapper.ErrorHandling;
+using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
+using LegacyWrapperClient.Configuration;
 using LegacyWrapperTest.Interface;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,12 +12,15 @@ namespace LegacyWrapperTest.Client
     [TestClass]
     public class EdgeCaseTests : LegacyWrapperTestBase
     {
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [TestMethod, ExpectedException(typeof(ArgumentException))]
         public void TestTypeIsNotAnInterface()
         {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             // Test a random class that's derived from IDisposable but not an interface
-            using (WrapperClientFactory<HttpListener>.CreateWrapperClient())
+            using (WrapperClientFactory<HttpListener>.CreateWrapperClient(configuration))
             {
                 // Do nothing
             }
@@ -24,7 +29,11 @@ namespace LegacyWrapperTest.Client
         [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
         public void TestLoadNonExistingLibrary()
         {
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 client.TestNonExistingLibrary();
             }
@@ -33,7 +42,11 @@ namespace LegacyWrapperTest.Client
         [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
         public void TestLoadNonExistingFunction()
         {
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 client.TestNonExistingFunction();
             }
@@ -42,8 +55,12 @@ namespace LegacyWrapperTest.Client
         [TestMethod, ExpectedException(typeof(ObjectDisposedException))]
         public void TestMustThrowObjectDisposedException()
         {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             ITestDll client;
-            using (client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            using (client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 // Do nothing
             }
@@ -54,7 +71,11 @@ namespace LegacyWrapperTest.Client
         [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
         public void TestInterfaceContainsNoAttribute()
         {
-            using (var client = WrapperClientFactory<ITestDllWithoutAttribute>.CreateWrapperClient())
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
+            using (var client = WrapperClientFactory<ITestDllWithoutAttribute>.CreateWrapperClient(configuration))
             {
                 client.MethodWithAttribute();
             }
@@ -63,7 +84,11 @@ namespace LegacyWrapperTest.Client
         [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
         public void TestMethodContainsNoAttribute()
         {
-            using (var client = WrapperClientFactory<ITestDllWithAttribute>.CreateWrapperClient())
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
+            using (var client = WrapperClientFactory<ITestDllWithAttribute>.CreateWrapperClient(configuration))
             {
                 client.MethodWithoutAttribute();
             }

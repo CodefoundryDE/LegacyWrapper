@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using LegacyWrapperClient.Architecture;
+using LegacyWrapperClient.Configuration;
 using LegacyWrapperClient.DynamicProxy;
 
 namespace LegacyWrapperClient.Client
@@ -22,10 +23,10 @@ namespace LegacyWrapperClient.Client
         /// Creates a new instance of TFunctions.
         /// All calls will be proxied over a named pipe to the wrapper executable.
         /// </summary>
-        /// <param name="targetArchitecture">Architecture of the library to load (X86 / AMD64). Defaults to X86.</param>
+        /// <param name="configuration">WrapperConfiguration object holding configuration info.</param>
         /// <exception cref="ArgumentException">An ArgumentException is thrown if the supplied generic type parameter is not an interface.</exception>
         /// <returns>Returns a new instance of TFunctions.</returns>
-        public static TFunctions CreateWrapperClient(TargetArchitecture targetArchitecture = TargetArchitecture.X86)
+        public static TFunctions CreateWrapperClient(IWrapperConfig configuration)
         {
             if (!typeof(TFunctions).IsInterface)
             {
@@ -33,7 +34,7 @@ namespace LegacyWrapperClient.Client
             }
 
             IProxyGenerator generator = new ProxyGenerator(new PersistentProxyBuilder());
-            IInterceptor interceptor = new WrapperClientInterceptor(typeof(TFunctions), targetArchitecture);
+            IInterceptor interceptor = new WrapperClientInterceptor(typeof(TFunctions), configuration);
 
             return generator.CreateInterfaceProxyWithoutTarget<TFunctions>(interceptor);
         }

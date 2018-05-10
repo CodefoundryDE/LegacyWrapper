@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using LegacyWrapper.Common.Attributes;
 using LegacyWrapper.Common.Serialization;
 using LegacyWrapperClient.Architecture;
+using LegacyWrapperClient.Configuration;
 
 namespace LegacyWrapperClient.Client
 {
@@ -35,12 +36,12 @@ namespace LegacyWrapperClient.Client
         /// <summary>
         /// Creates a new WrapperClient instance.
         /// </summary>
-        /// <param name="targetArchitecture">Architecture of the library to load (X86 / AMD64). Defaults to X86.</param>
-        public WrapperClient(TargetArchitecture targetArchitecture = TargetArchitecture.X86)
+        /// <param name="configuration">WrapperConfiguration object holding configuration info.</param>
+        public WrapperClient(IWrapperConfig configuration)
         {
             string token = Guid.NewGuid().ToString();
 
-            string wrapperName = WrapperNames[targetArchitecture];
+            string wrapperName = WrapperNames[configuration.TargetArchitecture];
             // Pass token and library name to child process
             _wrapperProcess = Process.Start(wrapperName, token);
 

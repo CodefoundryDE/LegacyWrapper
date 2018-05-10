@@ -6,6 +6,7 @@ using System.Threading;
 using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
+using LegacyWrapperClient.Configuration;
 using LegacyWrapperClient.DynamicProxy;
 using LegacyWrapperTest.Interface;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,9 +21,13 @@ namespace LegacyWrapperTest.Client
         {
             WrapperClientInterceptor.OverrideLibraryName = null;
 
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             // Create new Wrapper client providing the proxy interface
             // Remember to ensure a call to the Dispose()-Method!
-            using (var client = WrapperClientFactory<IUser32Dll>.CreateWrapperClient(ArchitectureToLoad))
+            using (var client = WrapperClientFactory<IUser32Dll>.CreateWrapperClient(configuration))
             {
                 // Make calls - it's that simple!
                 int x = client.GetSystemMetrics(0);
@@ -33,11 +38,15 @@ namespace LegacyWrapperTest.Client
         [TestMethod]
         public void TestStdCall()
         {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             int input = 5;
 
             int result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 result = client.TestStdCall(input);
             }
@@ -48,11 +57,15 @@ namespace LegacyWrapperTest.Client
         [TestMethod]
         public void TestNormalFunc()
         {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             int input = 5;
 
             int result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 result = client.TestNormalFunc(input);
             }
@@ -63,11 +76,15 @@ namespace LegacyWrapperTest.Client
         [TestMethod]
         public void TestPCharHandling()
         {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             string input = "Hello World";
 
             string result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 result = client.TestPCharHandling(input);
             }
@@ -78,11 +95,15 @@ namespace LegacyWrapperTest.Client
         [TestMethod]
         public void TestPWideCharHandling()
         {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             string input = "Hello World";
 
             string result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 result = client.TestPWideCharHandling(input);
             }
@@ -93,8 +114,12 @@ namespace LegacyWrapperTest.Client
         [TestMethod]
         public void TestRefParameterHandling()
         {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             int parameter = 1337;
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 client.TestVarParamHandling(ref parameter);
             }
@@ -106,10 +131,14 @@ namespace LegacyWrapperTest.Client
         [TestMethod]
         public void TestMultipleRefParamsHandling()
         {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             int param1 = 1337;
             int param2 = 7777;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 client.TestMultipleVarParamsHandling(ref param1, ref param2);
             }
@@ -122,9 +151,13 @@ namespace LegacyWrapperTest.Client
         [TestMethod]
         public void TestCallLibraryMultipleTimes()
         {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
             int parameter = 1337;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(ArchitectureToLoad))
+            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
             {
                 client.TestVarParamHandling(ref parameter);
                 client.TestVarParamHandling(ref parameter);

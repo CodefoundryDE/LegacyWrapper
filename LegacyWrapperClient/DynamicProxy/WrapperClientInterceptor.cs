@@ -10,6 +10,7 @@ using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
+using LegacyWrapperClient.Configuration;
 
 namespace LegacyWrapperClient.DynamicProxy
 {
@@ -28,9 +29,9 @@ namespace LegacyWrapperClient.DynamicProxy
         private readonly WrapperClient _wrapperClient;
         private readonly Type _interfaceType;
 
-        public WrapperClientInterceptor(Type interfaceType, TargetArchitecture targetArchitecture)
+        public WrapperClientInterceptor(Type interfaceType, IWrapperConfig configuration)
         {
-            _wrapperClient = new WrapperClient(targetArchitecture);
+            _wrapperClient = new WrapperClient(configuration);
             _interfaceType = interfaceType;
         }
 
