@@ -27,7 +27,7 @@ namespace LegacyWrapperTest.Client
 
             // Create new Wrapper client providing the proxy interface
             // Remember to ensure a call to the Dispose()-Method!
-            using (var client = WrapperClientFactory<IUser32Dll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<IUser32Dll>.CreateWrapperProxy(configuration))
             {
                 // Make calls - it's that simple!
                 int x = client.GetSystemMetrics(0);
@@ -46,7 +46,7 @@ namespace LegacyWrapperTest.Client
 
             int result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 result = client.TestStdCall(input);
             }
@@ -65,7 +65,7 @@ namespace LegacyWrapperTest.Client
 
             int result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 result = client.TestNormalFunc(input);
             }
@@ -84,7 +84,7 @@ namespace LegacyWrapperTest.Client
 
             string result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 result = client.TestPCharHandling(input);
             }
@@ -103,7 +103,7 @@ namespace LegacyWrapperTest.Client
 
             string result;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 result = client.TestPWideCharHandling(input);
             }
@@ -119,7 +119,7 @@ namespace LegacyWrapperTest.Client
                 .Build();
 
             int parameter = 1337;
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 client.TestVarParamHandling(ref parameter);
             }
@@ -138,7 +138,7 @@ namespace LegacyWrapperTest.Client
             int param1 = 1337;
             int param2 = 7777;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 client.TestMultipleVarParamsHandling(ref param1, ref param2);
             }
@@ -157,7 +157,7 @@ namespace LegacyWrapperTest.Client
 
             int parameter = 1337;
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 client.TestVarParamHandling(ref parameter);
                 client.TestVarParamHandling(ref parameter);

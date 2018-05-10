@@ -37,7 +37,11 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="PommaLabs.Thrower, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
+      <HintPath>..\packages\Thrower.4.3.1\lib\net45\PommaLabs.Thrower.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,7 +54,7 @@
   <ItemGroup>
     <Compile Include="Architecture\TargetArchitecture.cs" />
     <Compile Include="Client\WrapperClient.cs" />
-    <Compile Include="Client\WrapperClientFactory.cs" />
+    <Compile Include="Client\WrapperProxyFactory.cs" />
     <Compile Include="Configuration\IWrapperConfig.cs" />
     <Compile Include="Configuration\WrapperConfig.cs" />
     <Compile Include="Configuration\WrapperConfigBuilder.cs" />

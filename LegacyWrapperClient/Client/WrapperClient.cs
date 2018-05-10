@@ -17,6 +17,7 @@ using LegacyWrapper.Common.Attributes;
 using LegacyWrapper.Common.Serialization;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Configuration;
+using PommaLabs.Thrower;
 
 namespace LegacyWrapperClient.Client
 {
@@ -60,7 +61,7 @@ namespace LegacyWrapperClient.Client
         /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
         internal object InvokeInternal(CallData callData)
         {
-            AssertNotDisposed();
+            Raise.ObjectDisposedException.If(_disposed, nameof(WrapperClient));
             
             // Write request to server
             _formatter.Serialize(_pipe, callData);
@@ -73,7 +74,7 @@ namespace LegacyWrapperClient.Client
                 throw callResult.Exception;
             }
 
-            AssertLengthOfArgsEquals(callData.Parameters, callResult.Parameters);
+            Raise.InvalidDataException.If(callData.Parameters.Length != callResult.Parameters.Length, "Returned parameters differ in length from passed parameters");
 
             for (int i = 0; i < callData.Parameters.Length; i++)
             {
@@ -81,23 +82,6 @@ namespace LegacyWrapperClient.Client
             }
 
             return callResult.Result;
-        }
-
-        private void AssertNotDisposed()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(nameof(WrapperClient));
-            }
-        }
-
-        private void AssertLengthOfArgsEquals(object[] originalArgs, object[] callResultParamters)
-        {
-            // Exchange ref params
-            if (originalArgs.Length != callResultParamters.Length)
-            {
-                throw new InvalidDataException("Returned parameters differ in length from passed parameters");
-            }
         }
 
         /// <summary>

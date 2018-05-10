@@ -20,7 +20,7 @@ namespace LegacyWrapperTest.Client
                 .Build();
 
             // Test a random class that's derived from IDisposable but not an interface
-            using (WrapperClientFactory<HttpListener>.CreateWrapperClient(configuration))
+            using (WrapperProxyFactory<HttpListener>.CreateWrapperProxy(configuration))
             {
                 // Do nothing
             }
@@ -33,7 +33,7 @@ namespace LegacyWrapperTest.Client
                 .TargetArchitecture(ArchitectureToLoad)
                 .Build();
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 client.TestNonExistingLibrary();
             }
@@ -46,7 +46,7 @@ namespace LegacyWrapperTest.Client
                 .TargetArchitecture(ArchitectureToLoad)
                 .Build();
 
-            using (var client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 client.TestNonExistingFunction();
             }
@@ -60,7 +60,7 @@ namespace LegacyWrapperTest.Client
                 .Build();
 
             ITestDll client;
-            using (client = WrapperClientFactory<ITestDll>.CreateWrapperClient(configuration))
+            using (client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
             {
                 // Do nothing
             }
@@ -75,7 +75,7 @@ namespace LegacyWrapperTest.Client
                 .TargetArchitecture(ArchitectureToLoad)
                 .Build();
 
-            using (var client = WrapperClientFactory<ITestDllWithoutAttribute>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDllWithoutAttribute>.CreateWrapperProxy(configuration))
             {
                 client.MethodWithAttribute();
             }
@@ -88,7 +88,7 @@ namespace LegacyWrapperTest.Client
                 .TargetArchitecture(ArchitectureToLoad)
                 .Build();
 
-            using (var client = WrapperClientFactory<ITestDllWithAttribute>.CreateWrapperClient(configuration))
+            using (var client = WrapperProxyFactory<ITestDllWithAttribute>.CreateWrapperProxy(configuration))
             {
                 client.MethodWithoutAttribute();
             }

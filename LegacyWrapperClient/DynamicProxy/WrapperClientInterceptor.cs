@@ -11,6 +11,7 @@ using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
 using LegacyWrapperClient.Configuration;
+using PommaLabs.Thrower;
 
 namespace LegacyWrapperClient.DynamicProxy
 {
@@ -37,7 +38,7 @@ namespace LegacyWrapperClient.DynamicProxy
 
         public void Intercept(IInvocation invocation)
         {
-            AssertIsNotDisposed();
+            Raise.ObjectDisposedException.If(_isDisposed, nameof(WrapperClientInterceptor));
 
             // Early out if it'a call to Dispose()
             if (invocation.Method.Name == nameof(IDisposable.Dispose))
@@ -78,19 +79,9 @@ namespace LegacyWrapperClient.DynamicProxy
                 .Cast<T>()
                 .ToArray();
 
-            if (dllImportAttributes.Length != 1)
-            {
-                throw new LegacyWrapperException($"{attributeProvider.Name} must contain exactly one {typeof(T).Name}");
-            }
-            return dllImportAttributes[0];
-        }
+            Raise<LegacyWrapperException>.IfNot(dllImportAttributes.Length == 1, $"{attributeProvider.Name} must contain exactly one {typeof(T).Name}");
 
-        private void AssertIsNotDisposed()
-        {
-            if (_isDisposed)
-            {
-                throw new ObjectDisposedException(nameof(_wrapperClient));
-            }
+            return dllImportAttributes[0];
         }
 
         #region IDisposable-Pattern

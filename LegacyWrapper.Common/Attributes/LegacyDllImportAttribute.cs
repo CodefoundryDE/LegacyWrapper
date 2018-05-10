@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PommaLabs.Thrower;
 
 namespace LegacyWrapper.Common.Attributes
 {
@@ -23,16 +24,9 @@ namespace LegacyWrapper.Common.Attributes
         /// <param name="libraryName">The name of the library to load.</param>
         public LegacyDllImportAttribute(string libraryName)
         {
-            if (libraryName == null)
-            {
-                throw new ArgumentNullException(nameof(libraryName));
-            }
-
-            if (string.IsNullOrWhiteSpace(libraryName))
-            {
-                throw new ArgumentException($"Parameter {nameof(libraryName)} must not be empty!");
-            }
-
+            Raise.ArgumentNullException.IfIsNull(libraryName, nameof(libraryName));
+            Raise.ArgumentException.IfIsNullOrWhiteSpace(libraryName, nameof(libraryName), $"Parameter {nameof(libraryName)} must not be empty!");
+            
             LibraryName = libraryName;
         }
     }
