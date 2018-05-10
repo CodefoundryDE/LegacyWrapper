@@ -13,7 +13,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using LegacyWrapper.Common.Interop;
 using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
 
@@ -48,10 +47,6 @@ namespace LegacyWrapper.Common.Wrapper
                 try
                 {
                     CallData data = (CallData)Formatter.Deserialize(pipe);
-
-                    // Load requested library
-
-                    // Receive CallData from client
 
                     while (data.Status != KeepAliveStatus.Close)
                     {
