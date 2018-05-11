@@ -50,6 +50,7 @@
     <Compile Include="Attributes\LegacyDllImportAttribute.cs" />
     <Compile Include="Attributes\LegacyDllMethodAttribute.cs" />
     <Compile Include="ErrorHandling\LegacyWrapperException.cs" />
+    <Compile Include="Interop\UnmanagedLibraryLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>

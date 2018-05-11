@@ -13,6 +13,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using LegacyWrapper.Common.Interop;
 using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
 
@@ -30,7 +31,7 @@ namespace LegacyWrapper.Common.Wrapper
         /// The Wrapper will use this string to create a named pipe.
         /// </param>
         [HandleProcessCorruptedStateExceptions]
-        public static void Call(string[] args)
+        public void Call(string[] args)
         {
             if (args.Length != 1)
             {
@@ -40,20 +41,18 @@ namespace LegacyWrapper.Common.Wrapper
             string token = args[0];
 
             // Create new named pipe with token from client
-            using (var pipe = new NamedPipeServerStream(token, PipeDirection.InOut, 1, PipeTransmissionMode.Message))
+            using (var pipe = CreatePipeStream(token))
             {
                 pipe.WaitForConnection();
 
                 try
                 {
-                    CallData data = (CallData)Formatter.Deserialize(pipe);
-
-                    while (data.Status != KeepAliveStatus.Close)
+                    CallData data;
+                    do
                     {
-                        InvokeFunction(data, pipe);
-
                         data = (CallData)Formatter.Deserialize(pipe);
-                    }
+                        InvokeFunction(data, pipe);
+                    } while (data.Status != KeepAliveStatus.Close);
                 }
                 catch (Exception e)
                 {
@@ -62,53 +61,29 @@ namespace LegacyWrapper.Common.Wrapper
             }
         }
 
-        [HandleProcessCorruptedStateExceptions]
-        private static void InvokeFunction(CallData data, Stream pipe)
+        private NamedPipeServerStream CreatePipeStream(string token)
         {
-            Type dllHandle = CreateTypeBuilder(data);
+            PipeDirection pipeDirection = PipeDirection.InOut;
+            PipeTransmissionMode pipeTransmissionMode = PipeTransmissionMode.Message;
+            int maxNumberOfServerInstances = 1;
 
-            // Invoke requested method
-            object result = dllHandle.GetMethod(data.ProcedureName)
-                                     .Invoke(null, data.Parameters);
+            return new NamedPipeServerStream(token, pipeDirection, maxNumberOfServerInstances, pipeTransmissionMode);
+        }
 
-            CallResult callResult = new CallResult
-            {
-                Result = result,
-                Parameters = data.Parameters,
-            };
+        [HandleProcessCorruptedStateExceptions]
+        private void InvokeFunction(CallData callData, Stream pipe)
+        {
+            CallResult callResult = new UnmanagedLibraryLoader().InvokeUnmanagedFunction(callData);
 
-            // Write result back to client
             Formatter.Serialize(pipe, callResult);
         }
 
-        private static Type CreateTypeBuilder(CallData callData)
+        private void WriteExceptionToClient(Stream pipe, Exception e)
         {
-            AssemblyName asmName = new AssemblyName("LegacyWrapper");
-            AssemblyBuilder asmBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.Run);
-            ModuleBuilder modBuilder = asmBuilder.DefineDynamicModule("LegacyWrapper", emitSymbolInfo: false);
-            TypeBuilder typeBuilder = modBuilder.DefineType("LegacyWrapper.WrapperType", TypeAttributes.Class | TypeAttributes.Public);
+            CallResult callResult = new CallResult();
+            callResult.Exception = new LegacyWrapperException("An error occured while calling a library function. See the inner exception for details.", e);
 
-            MethodBuilder pinvokeBuilder = typeBuilder.DefinePInvokeMethod(
-                name: callData.ProcedureName,
-                dllName: callData.LibraryName,
-                attributes: MethodAttributes.Static | MethodAttributes.Public | MethodAttributes.PinvokeImpl,
-                callingConvention: CallingConventions.Standard,
-                returnType: callData.ReturnType,
-                parameterTypes: callData.ParameterTypes,
-                nativeCallConv: callData.CallingConvention,
-                nativeCharSet: callData.CharSet);
-
-            pinvokeBuilder.SetImplementationFlags(pinvokeBuilder.GetMethodImplementationFlags() | MethodImplAttributes.PreserveSig);
-
-            return typeBuilder.CreateType();
-        }
-
-        private static void WriteExceptionToClient(Stream pipe, Exception e)
-        {
-            Formatter.Serialize(pipe, new CallResult
-            {
-                Exception = new LegacyWrapperException("An error occured while calling a library function. See the inner exception for details.", e),
-            });
+            Formatter.Serialize(pipe, callResult);
         }
     }
 }

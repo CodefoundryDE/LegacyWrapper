@@ -15,7 +15,8 @@ namespace LegacyWrapper32
         [HandleProcessCorruptedStateExceptions]
         static void Main(string[] args)
         {
-            WrapperHelper.Call(args);
+            WrapperHelper wrapperHelper = new WrapperHelper();
+            wrapperHelper.Call(args);
         }   
     }
 }
