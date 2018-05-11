@@ -14,7 +14,6 @@ namespace LegacyWrapper32
         /// The first parameter is expected to be a string.
         /// The Wrapper will use this string to create a named pipe.
         /// </param>
-        [HandleProcessCorruptedStateExceptions]
         static void Main(string[] args)
         {
             string errorMessage = "The number of arguments passed to this executable has to be exactly 1.";
