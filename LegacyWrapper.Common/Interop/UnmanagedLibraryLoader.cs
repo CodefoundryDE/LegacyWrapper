@@ -17,7 +17,7 @@ namespace LegacyWrapper.Common.Interop
         private const string ModuleName = "LegacyWrapper";
         private const string TypeName = "LegacyWrapper.WrapperType";
 
-        public CallResult InvokeUnmanagedFunction(CallData callData)
+        public static CallResult InvokeUnmanagedFunction(CallData callData)
         {
             Type dllHandle = CreateTypeBuilder(callData);
             MethodInfo methodInfo = dllHandle.GetMethod(callData.ProcedureName);
@@ -33,7 +33,7 @@ namespace LegacyWrapper.Common.Interop
             };
         }
 
-        private Type CreateTypeBuilder(CallData callData)
+        private static Type CreateTypeBuilder(CallData callData)
         {
             AssemblyName asmName = new AssemblyName(AssemblyName);
             AssemblyBuilder asmBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.Run);

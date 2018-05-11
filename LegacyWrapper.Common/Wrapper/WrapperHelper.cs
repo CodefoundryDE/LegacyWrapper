@@ -31,34 +31,31 @@ namespace LegacyWrapper.Common.Wrapper
         /// The Wrapper will use this string to create a named pipe.
         /// </param>
         [HandleProcessCorruptedStateExceptions]
-        public void Call(string[] args)
+        public void Call(string pipeToken)
         {
-            if (args.Length != 1)
-            {
-                return;
-            }
-
-            string token = args[0];
-
-            // Create new named pipe with token from client
-            using (var pipe = CreatePipeStream(token))
+            using (var pipe = CreatePipeStream(pipeToken))
             {
                 pipe.WaitForConnection();
 
                 try
                 {
-                    CallData data;
-                    do
-                    {
-                        data = (CallData)Formatter.Deserialize(pipe);
-                        InvokeFunction(data, pipe);
-                    } while (data.Status != KeepAliveStatus.Close);
+                    ProcessMessages(pipe);
                 }
                 catch (Exception e)
                 {
                     WriteExceptionToClient(pipe, e);
                 }
             }
+        }
+
+        private void ProcessMessages(PipeStream pipe)
+        {
+            CallData data;
+            do
+            {
+                data = (CallData)Formatter.Deserialize(pipe);
+                InvokeFunction(data, pipe);
+            } while (data.Status != KeepAliveStatus.Close);
         }
 
         private NamedPipeServerStream CreatePipeStream(string token)
@@ -73,7 +70,7 @@ namespace LegacyWrapper.Common.Wrapper
         [HandleProcessCorruptedStateExceptions]
         private void InvokeFunction(CallData callData, Stream pipe)
         {
-            CallResult callResult = new UnmanagedLibraryLoader().InvokeUnmanagedFunction(callData);
+            CallResult callResult = UnmanagedLibraryLoader.InvokeUnmanagedFunction(callData);
 
             Formatter.Serialize(pipe, callResult);
         }
@@ -81,7 +78,9 @@ namespace LegacyWrapper.Common.Wrapper
         private void WriteExceptionToClient(Stream pipe, Exception e)
         {
             CallResult callResult = new CallResult();
-            callResult.Exception = new LegacyWrapperException("An error occured while calling a library function. See the inner exception for details.", e);
+            callResult.Exception =
+                new LegacyWrapperException(
+                    "An error occured while calling a library function. See the inner exception for details.", e);
 
             Formatter.Serialize(pipe, callResult);
         }

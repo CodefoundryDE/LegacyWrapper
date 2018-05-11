@@ -1,5 +1,6 @@
 using System.Runtime.ExceptionServices;
 using LegacyWrapper.Common.Wrapper;
+using PommaLabs.Thrower;
 
 namespace LegacyWrapper64
 {
@@ -15,8 +16,12 @@ namespace LegacyWrapper64
         [HandleProcessCorruptedStateExceptions]
         static void Main(string[] args)
         {
+            string errorMessage = "The number of arguments passed to this executable has to be exactly 1.";
+            Raise.ArgumentNullException.IfIsNull(args, nameof(args), errorMessage);
+            Raise.ArgumentException.IfNot(args.Length == 1, nameof(args), errorMessage);
+
             WrapperHelper wrapperHelper = new WrapperHelper();
-            wrapperHelper.Call(args);
+            wrapperHelper.Call(args[0]);
         }   
     }
 }
