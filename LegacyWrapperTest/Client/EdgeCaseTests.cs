@@ -20,7 +20,7 @@ namespace LegacyWrapperTest.Client
                 .Build();
 
             // Test a random class that's derived from IDisposable but not an interface
-            using (WrapperProxyFactory<HttpListener>.CreateWrapperProxy(configuration))
+            using (WrapperProxyFactory<HttpListener>.GetInstance(configuration))
             {
                 // Do nothing
             }
@@ -33,7 +33,7 @@ namespace LegacyWrapperTest.Client
                 .TargetArchitecture(ArchitectureToLoad)
                 .Build();
 
-            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.GetInstance(configuration))
             {
                 client.TestNonExistingLibrary();
             }
@@ -46,7 +46,7 @@ namespace LegacyWrapperTest.Client
                 .TargetArchitecture(ArchitectureToLoad)
                 .Build();
 
-            using (var client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
+            using (var client = WrapperProxyFactory<ITestDll>.GetInstance(configuration))
             {
                 client.TestNonExistingFunction();
             }
@@ -60,7 +60,7 @@ namespace LegacyWrapperTest.Client
                 .Build();
 
             ITestDll client;
-            using (client = WrapperProxyFactory<ITestDll>.CreateWrapperProxy(configuration))
+            using (client = WrapperProxyFactory<ITestDll>.GetInstance(configuration))
             {
                 // Do nothing
             }
@@ -75,7 +75,7 @@ namespace LegacyWrapperTest.Client
                 .TargetArchitecture(ArchitectureToLoad)
                 .Build();
 
-            using (var client = WrapperProxyFactory<ITestDllWithoutAttribute>.CreateWrapperProxy(configuration))
+            using (var client = WrapperProxyFactory<ITestDllWithoutAttribute>.GetInstance(configuration))
             {
                 client.MethodWithAttribute();
             }
@@ -88,7 +88,7 @@ namespace LegacyWrapperTest.Client
                 .TargetArchitecture(ArchitectureToLoad)
                 .Build();
 
-            using (var client = WrapperProxyFactory<ITestDllWithAttribute>.CreateWrapperProxy(configuration))
+            using (var client = WrapperProxyFactory<ITestDllWithAttribute>.GetInstance(configuration))
             {
                 client.MethodWithoutAttribute();
             }

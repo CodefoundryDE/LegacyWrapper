@@ -15,16 +15,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using LegacyWrapper.Common.Attributes;
 using LegacyWrapper.Common.Serialization;
+using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Configuration;
+using LegacyWrapperClient.Token;
 using PommaLabs.Thrower;
 
 namespace LegacyWrapperClient.Client
 {
     internal class WrapperClient : IDisposable
     {
-        private bool _disposed;
-        private readonly IFormatter _formatter;
+        private const string LocalPipeUrl = ".";
+
+        private bool _isDisposed;
+
         private readonly NamedPipeClientStream _pipe;
         private readonly Process _wrapperProcess;
 
@@ -34,21 +38,28 @@ namespace LegacyWrapperClient.Client
             { TargetArchitecture.Amd64, "Codefoundry.LegacyWrapper64.exe" },
         };
 
+        private readonly IFormatter _formatter;
+
         /// <summary>
         /// Creates a new WrapperClient instance.
         /// </summary>
         /// <param name="configuration">WrapperConfiguration object holding configuration info.</param>
-        public WrapperClient(IWrapperConfig configuration)
+        /// <param name="formatter">Formatter instance for data serialization to the pipe.</param>
+        /// <param name="tokenGenerator">ITokenGenerator instance for generating connection tokens.</param>
+        public WrapperClient(IWrapperConfig configuration, IFormatter formatter, ITokenGenerator tokenGenerator)
         {
-            string token = Guid.NewGuid().ToString();
+            Raise.ArgumentNullException.IfIsNull(configuration, nameof(configuration));
+            Raise.ArgumentNullException.IfIsNull(formatter, nameof(formatter));
+
+            _formatter = formatter;
+
+            string token = tokenGenerator.GenerateToken();
 
             string wrapperName = WrapperNames[configuration.TargetArchitecture];
-            // Pass token and library name to child process
+
             _wrapperProcess = Process.Start(wrapperName, token);
 
-            _formatter = new BinaryFormatter();
-
-            _pipe = new NamedPipeClientStream(".", token, PipeDirection.InOut);
+            _pipe = new NamedPipeClientStream(LocalPipeUrl, token, PipeDirection.InOut);
             _pipe.Connect();
             _pipe.ReadMode = PipeTransmissionMode.Message;
         }
@@ -61,12 +72,33 @@ namespace LegacyWrapperClient.Client
         /// <exception cref="Exception">This Method will rethrow all exceptions thrown by the wrapper.</exception>
         internal object InvokeInternal(CallData callData)
         {
-            Raise.ObjectDisposedException.If(_disposed, nameof(WrapperClient));
-            
-            // Write request to server
-            _formatter.Serialize(_pipe, callData);
+            Raise.ObjectDisposedException.If(_isDisposed, nameof(WrapperClient));
 
-            // Receive result from server
+            // Write request to server
+            SendCallRequest(callData);
+
+            CallResult callResult = ReceiveCallResponse();
+
+            CopyParameters(callResult, callData);
+
+            return callResult.Result;
+        }
+
+        private void CopyParameters(CallResult callResult, CallData callData)
+        {
+            string errorMessage = "Returned parameters differ in length from passed parameters";
+            Raise.InvalidDataException.If(callData.Parameters.Length != callResult.Parameters.Length, errorMessage);
+
+            Array.Copy(callResult.Parameters, callData.Parameters, callResult.Parameters.Length);
+        }
+
+        private void SendCallRequest(CallData callData)
+        {
+            _formatter.Serialize(_pipe, callData);
+        }
+
+        private CallResult ReceiveCallResponse()
+        {
             CallResult callResult = (CallResult)_formatter.Deserialize(_pipe);
 
             if (callResult.Exception != null)
@@ -74,14 +106,7 @@ namespace LegacyWrapperClient.Client
                 throw callResult.Exception;
             }
 
-            Raise.InvalidDataException.If(callData.Parameters.Length != callResult.Parameters.Length, "Returned parameters differ in length from passed parameters");
-
-            for (int i = 0; i < callData.Parameters.Length; i++)
-            {
-                callData.Parameters[i] = callResult.Parameters[i];
-            }
-
-            return callResult.Result;
+            return callResult;
         }
 
         /// <summary>
@@ -101,6 +126,16 @@ namespace LegacyWrapperClient.Client
             {
                 _pipe.Close();
             }
+
+            if (!_wrapperProcess.HasExited)
+            {
+                _wrapperProcess.Close();
+            }
+        }
+
+        private string CreateToken()
+        {
+            return Guid.NewGuid().ToString();
         }
 
         #region IDisposable-Implementation
@@ -117,7 +152,7 @@ namespace LegacyWrapperClient.Client
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
+            if (_isDisposed)
             {
                 return;
             }
@@ -131,7 +166,7 @@ namespace LegacyWrapperClient.Client
 
             // Free any unmanaged objects here.
 
-            _disposed = true;
+            _isDisposed = true;
         }
         #endregion
 

@@ -30,9 +30,11 @@ namespace LegacyWrapperClient.DynamicProxy
         private readonly WrapperClient _wrapperClient;
         private readonly Type _interfaceType;
 
-        public WrapperClientInterceptor(Type interfaceType, IWrapperConfig configuration)
+        public WrapperClientInterceptor(Type interfaceType, WrapperClient wrapperClient)
         {
-            _wrapperClient = new WrapperClient(configuration);
+            Raise.ArgumentNullException.IfIsNull(wrapperClient, nameof(wrapperClient));
+
+            _wrapperClient = wrapperClient;
             _interfaceType = interfaceType;
         }
 
@@ -40,7 +42,7 @@ namespace LegacyWrapperClient.DynamicProxy
         {
             Raise.ObjectDisposedException.If(_isDisposed, nameof(WrapperClientInterceptor));
 
-            // Early out if it'a call to Dispose()
+            // Early out if it's a call to Dispose()
             if (invocation.Method.Name == nameof(IDisposable.Dispose))
             {
                 Dispose();
