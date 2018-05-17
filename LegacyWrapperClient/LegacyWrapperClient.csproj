@@ -56,11 +56,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Architecture\TargetArchitecture.cs" />
+    <Compile Include="Client\IPipeConnector.cs" />
+    <Compile Include="Client\WrapperClient.cs" />
+    <Compile Include="Configuration\DefaultWrapperExecutableNameProvider.cs" />
     <Compile Include="Configuration\ILibraryNameProvider.cs" />
     <Compile Include="Configuration\DefaultLibraryNameProvider.cs" />
+    <Compile Include="Configuration\IWrapperExecutableNameProvider.cs" />
     <Compile Include="Token\ITokenGenerator.cs" />
     <Compile Include="Token\GuidTokenGenerator.cs" />
-    <Compile Include="Client\WrapperClient.cs" />
+    <Compile Include="Client\PipeConnector.cs" />
     <Compile Include="Client\WrapperProxyFactory.cs" />
     <Compile Include="Configuration\IWrapperConfig.cs" />
     <Compile Include="Configuration\WrapperConfig.cs" />

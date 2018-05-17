@@ -35,9 +35,10 @@ namespace LegacyWrapperClient.Client
 
             InjectionKernel.Bind<IFormatter>().To<BinaryFormatter>();
             InjectionKernel.Bind<IInterceptor>().To<WrapperClientInterceptor>();
-            InjectionKernel.Bind<WrapperClient>().ToSelf();
+            InjectionKernel.Bind<IPipeConnector>().To<PipeConnector>();
             InjectionKernel.Bind<ITokenGenerator>().To<GuidTokenGenerator>();
             InjectionKernel.Bind<ILibraryNameProvider>().To<DefaultLibraryNameProvider>();
+            InjectionKernel.Bind<IWrapperExecutableNameProvider>().To<DefaultWrapperExecutableNameProvider>();
         }
 
         private static TFunctions CreateProxy()
