@@ -26,10 +26,7 @@ namespace LegacyWrapper.Common.Wrapper
         /// <summary>
         /// Outsourced main method of the legacy dll wrapper.
         /// </summary>
-        /// <param name="args">
-        /// The first parameter is expected to be a string.
-        /// The Wrapper will use this string to create a named pipe.
-        /// </param>
+        /// <param name="pipeToken"></param>
         [HandleProcessCorruptedStateExceptions]
         public void Call(string pipeToken)
         {
@@ -67,7 +64,6 @@ namespace LegacyWrapper.Common.Wrapper
             return new NamedPipeServerStream(token, pipeDirection, maxNumberOfServerInstances, pipeTransmissionMode);
         }
 
-        [HandleProcessCorruptedStateExceptions]
         private void InvokeFunction(CallData callData, Stream pipe)
         {
             CallResult callResult = UnmanagedLibraryLoader.InvokeUnmanagedFunction(callData);
@@ -77,10 +73,10 @@ namespace LegacyWrapper.Common.Wrapper
 
         private void WriteExceptionToClient(Stream pipe, Exception e)
         {
+            string errorMessage = "An error occured while calling a library function. See the inner exception for details.";
+
             CallResult callResult = new CallResult();
-            callResult.Exception =
-                new LegacyWrapperException(
-                    "An error occured while calling a library function. See the inner exception for details.", e);
+            callResult.Exception = new LegacyWrapperException(errorMessage, e);
 
             Formatter.Serialize(pipe, callResult);
         }
