@@ -27,7 +27,7 @@ namespace LegacyWrapperClient.Client
     {
         // ReSharper disable once StaticMemberInGenericType
         // It's ok to have separate injection kernels for different interfaces
-        private static IKernel InjectionKernel { get; }
+        internal static IKernel InjectionKernel { get; }
 
         static WrapperProxyFactory()
         {
@@ -37,6 +37,7 @@ namespace LegacyWrapperClient.Client
             InjectionKernel.Bind<IInterceptor>().To<WrapperClientInterceptor>();
             InjectionKernel.Bind<WrapperClient>().ToSelf();
             InjectionKernel.Bind<ITokenGenerator>().To<GuidTokenGenerator>();
+            InjectionKernel.Bind<ILibraryNameProvider>().To<DefaultLibraryNameProvider>();
         }
 
         private static TFunctions CreateProxy()

@@ -56,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Architecture\TargetArchitecture.cs" />
+    <Compile Include="Configuration\ILibraryNameProvider.cs" />
+    <Compile Include="Configuration\DefaultLibraryNameProvider.cs" />
     <Compile Include="Token\ITokenGenerator.cs" />
     <Compile Include="Token\GuidTokenGenerator.cs" />
     <Compile Include="Client\WrapperClient.cs" />

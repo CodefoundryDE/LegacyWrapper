@@ -29,13 +29,17 @@ namespace LegacyWrapperClient.DynamicProxy
 
         private readonly WrapperClient _wrapperClient;
         private readonly Type _interfaceType;
+        private readonly ILibraryNameProvider _libraryNameProvider;
 
-        public WrapperClientInterceptor(Type interfaceType, WrapperClient wrapperClient)
+        public WrapperClientInterceptor(Type interfaceType, WrapperClient wrapperClient, ILibraryNameProvider libraryNameProvider)
         {
+            Raise.ArgumentNullException.IfIsNull(interfaceType, nameof(interfaceType));
             Raise.ArgumentNullException.IfIsNull(wrapperClient, nameof(wrapperClient));
+            Raise.ArgumentNullException.IfIsNull(libraryNameProvider, nameof(libraryNameProvider));
 
-            _wrapperClient = wrapperClient;
             _interfaceType = interfaceType;
+            _wrapperClient = wrapperClient;
+            _libraryNameProvider = libraryNameProvider;
         }
 
         public void Intercept(IInvocation invocation)
@@ -49,17 +53,13 @@ namespace LegacyWrapperClient.DynamicProxy
                 return;
             }
 
-            Type[] parameterTypes = invocation.Method.GetParameters().Select(x => x.ParameterType).ToArray();
+            Type[] parameterTypes = GetParameterTypesFromInvocation(invocation);
             Type returnType = invocation.Method.ReturnType;
 
-            var dllImportAttribute = GetLegacyAttribute<LegacyDllImportAttribute>(_interfaceType);
-            var dllMethodAttribute = GetLegacyAttribute<LegacyDllMethodAttribute>(invocation.Method);
+            LegacyDllImportAttribute dllImportAttribute = GetLegacyAttribute<LegacyDllImportAttribute>(_interfaceType);
+            LegacyDllMethodAttribute dllMethodAttribute = GetLegacyAttribute<LegacyDllMethodAttribute>(invocation.Method);
 
-            string libraryName = dllImportAttribute.LibraryName;
-            if (OverrideLibraryName != null)
-            {
-                libraryName = OverrideLibraryName;
-            }
+            string libraryName = _libraryNameProvider.GetLibraryName(dllImportAttribute);
 
             var callData = new CallData
             {
@@ -73,6 +73,14 @@ namespace LegacyWrapperClient.DynamicProxy
             };
 
             invocation.ReturnValue = _wrapperClient.InvokeInternal(callData);
+        }
+
+        private Type[] GetParameterTypesFromInvocation(IInvocation invocation)
+        {
+            return invocation.Method
+                .GetParameters()
+                .Select(x => x.ParameterType)
+                .ToArray();
         }
 
         private static T GetLegacyAttribute<T>(MemberInfo attributeProvider) where T : Attribute
