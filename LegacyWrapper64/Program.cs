@@ -15,12 +15,8 @@ namespace LegacyWrapper64
         /// </param>
         static void Main(string[] args)
         {
-            string errorMessage = "The number of arguments passed to this executable has to be exactly 1.";
-            Raise.ArgumentNullException.IfIsNull(args, nameof(args), errorMessage);
-            Raise.ArgumentException.IfNot(args.Length == 1, nameof(args), errorMessage);
-
-            WrapperHelper wrapperHelper = new WrapperHelper();
-            wrapperHelper.Call(args[0]);
-        }   
+            WrapperHelper wrapperHelper = new WrapperHelper(args);
+            wrapperHelper.Call();
+        }
     }
 }

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using LegacyWrapper.Common.Interop;
 using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
+using PommaLabs.Thrower;
 
 namespace LegacyWrapper.Common.Wrapper
 {
@@ -23,14 +24,25 @@ namespace LegacyWrapper.Common.Wrapper
     {
         private static readonly IFormatter Formatter = new BinaryFormatter();
 
+        private readonly string _pipeToken;
+
+        public WrapperHelper(string[] args)
+        {
+            string errorMessage = "The number of arguments passed to this executable has to be exactly 1.";
+            Raise.ArgumentNullException.IfIsNull(args, nameof(args), errorMessage);
+            Raise.ArgumentException.IfNot(args.Length == 1, nameof(args), errorMessage);
+
+            _pipeToken = args[0];
+        }
+
         /// <summary>
         /// Outsourced main method of the legacy dll wrapper.
         /// </summary>
         /// <param name="pipeToken"></param>
         [HandleProcessCorruptedStateExceptions]
-        public void Call(string pipeToken)
+        public void Call()
         {
-            using (var pipe = CreatePipeStream(pipeToken))
+            using (var pipe = CreatePipeStream(_pipeToken))
             {
                 pipe.WaitForConnection();
 
