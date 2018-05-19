@@ -8,13 +8,13 @@ using LegacyWrapper.Common.Token;
 using LegacyWrapperClient.Configuration;
 using PommaLabs.Thrower;
 
-namespace LegacyWrapperClient.Client
+namespace LegacyWrapperClient.ProcessHandling
 {
     internal class WrapperProcessStarter : IWrapperProcessStarter
     {
         private bool _isDisposed;
 
-        private Process _wrapperProcess;
+        private System.Diagnostics.Process _wrapperProcess;
 
         private readonly IWrapperConfig _configuration;
         private readonly IWrapperExecutableNameProvider _wrapperExecutableNameProvider;

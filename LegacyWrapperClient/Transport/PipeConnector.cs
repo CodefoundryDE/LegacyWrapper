@@ -18,11 +18,13 @@ using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.Common.Token;
 using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
+using LegacyWrapperClient.Client;
 using LegacyWrapperClient.Configuration;
+using LegacyWrapperClient.ProcessHandling;
 using LegacyWrapperClient.Token;
 using PommaLabs.Thrower;
 
-namespace LegacyWrapperClient.Client
+namespace LegacyWrapperClient.Transport
 {
     internal class PipeConnector : IPipeConnector
     {

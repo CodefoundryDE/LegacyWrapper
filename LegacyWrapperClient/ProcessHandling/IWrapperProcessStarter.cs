@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LegacyWrapperClient.Client
+namespace LegacyWrapperClient.ProcessHandling
 {
     internal interface IWrapperProcessStarter : IDisposable
     {

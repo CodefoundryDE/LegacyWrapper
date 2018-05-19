@@ -1,7 +1,7 @@
 ﻿using System;
 using LegacyWrapper.Common.Serialization;
 
-namespace LegacyWrapperClient.Client
+namespace LegacyWrapperClient.Transport
 {
     internal interface IPipeConnector : IDisposable
     {

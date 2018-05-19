@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LegacyWrapper.Common.Serialization;
+using LegacyWrapperClient.Transport;
 using PommaLabs.Thrower;
 
 namespace LegacyWrapperClient.Client
