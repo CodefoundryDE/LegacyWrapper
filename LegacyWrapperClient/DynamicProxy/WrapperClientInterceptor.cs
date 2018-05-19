@@ -20,11 +20,6 @@ namespace LegacyWrapperClient.DynamicProxy
     /// </summary>
     internal class WrapperClientInterceptor : IInterceptor, IDisposable
     {
-        /// <summary>
-        /// This is an internal Property that is used for testing purposes.
-        /// </summary>
-        internal static string OverrideLibraryName = null;
-
         private bool _isDisposed = false;
 
         private readonly WrapperClient _wrapperClient;

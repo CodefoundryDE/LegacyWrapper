@@ -19,8 +19,6 @@ namespace LegacyWrapperTest.Integration.Client
         [TestMethod]
         public void TestCallMethodWithoutException()
         {
-            WrapperClientInterceptor.OverrideLibraryName = null;
-
             IWrapperConfig configuration = WrapperConfigBuilder.Create()
                 .TargetArchitecture(ArchitectureToLoad)
                 .Build();
