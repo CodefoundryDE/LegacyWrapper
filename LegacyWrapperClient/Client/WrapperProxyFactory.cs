@@ -76,7 +76,7 @@ namespace LegacyWrapperClient.Client
         {
             ITokenGenerator tokenGenerator = InjectionKernel.Get<ITokenGenerator>();
 
-            InjectionKernel.Bind<PipeToken>().ToConstant(tokenGenerator.GenerateToken());
+            InjectionKernel.Rebind<PipeToken>().ToConstant(tokenGenerator.GenerateToken());
         }
     }
 }
