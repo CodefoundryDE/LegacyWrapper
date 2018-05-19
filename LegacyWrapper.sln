@@ -21,8 +21,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{22EB660B-6C72-4378-BF0C-D8A85E0D33B3}"
 	ProjectSection(SolutionItems) = preProject
 		Changelog.md = Changelog.md
-		CommonSettings.targets = CommonSettings.targets
-		DefaultSettings.items = DefaultSettings.items
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
 		LICENSE = LICENSE
 		Readme.md = Readme.md
