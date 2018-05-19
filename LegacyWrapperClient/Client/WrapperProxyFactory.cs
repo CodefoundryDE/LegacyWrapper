@@ -40,8 +40,6 @@ namespace LegacyWrapperClient.Client
             InjectionKernel.Bind<ITokenGenerator>().To<GuidTokenGenerator>();
             InjectionKernel.Bind<ILibraryNameProvider>().To<DefaultLibraryNameProvider>();
             InjectionKernel.Bind<IWrapperExecutableNameProvider>().To<DefaultWrapperExecutableNameProvider>();
-
-            CreateToken();
         }
 
         private static TFunctions CreateProxy()
@@ -63,6 +61,8 @@ namespace LegacyWrapperClient.Client
         {
             Raise.ArgumentException.If(!typeof(TFunctions).IsInterface, nameof(TFunctions), "Generic parameter type <TFunctions> must be an interface.");
 
+            CreateToken();
+
             InjectionKernel.Rebind<IWrapperConfig>().ToConstant(configuration);
             InjectionKernel.Rebind<Type>().ToConstant(typeof(TFunctions));
 
@@ -73,7 +73,7 @@ namespace LegacyWrapperClient.Client
         {
             ITokenGenerator tokenGenerator = InjectionKernel.Get<ITokenGenerator>();
 
-            InjectionKernel.Bind<PipeToken>().ToMethod(context => tokenGenerator.GenerateToken());
+            InjectionKernel.Bind<PipeToken>().ToConstant(tokenGenerator.GenerateToken());
         }
     }
 }
