@@ -4,10 +4,10 @@ using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
 using LegacyWrapperClient.Configuration;
-using LegacyWrapperTest.Interface;
+using LegacyWrapperTest.Integration.Interface;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LegacyWrapperTest.Client
+namespace LegacyWrapperTest.Integration.Client
 {
     [TestClass]
     public class EdgeCaseTests : LegacyWrapperTestBase

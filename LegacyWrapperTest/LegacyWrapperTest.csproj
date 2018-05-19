@@ -35,9 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -55,13 +52,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Client\EdgeCaseTests.cs" />
-    <Compile Include="Client\LegacyWrapperTestBase.cs" />
-    <Compile Include="Client\WrapperClientTest.cs" />
     <Compile Include="Configuration\DefaultLibraryNameProviderTest.cs" />
-    <Compile Include="TestSetup\TestLibraryNameProvider.cs" />
-    <Compile Include="Interface\ITestDll.cs" />
-    <Compile Include="Interface\IUser32Dll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,29 +60,10 @@
       <Project>{B9E346E3-ED4F-4824-B780-825D87BE9D48}</Project>
       <Name>LegacyWrapper.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LegacyWrapper32\LegacyWrapper32.csproj">
-      <Project>{b7665a68-f19c-4539-9fe1-06b14ba774e3}</Project>
-      <Name>LegacyWrapper32</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LegacyWrapper64\LegacyWrapper64.csproj">
-      <Project>{91df95e2-014e-406b-8eba-98c6b50f9840}</Project>
-      <Name>LegacyWrapper64</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LegacyWrapperClient\LegacyWrapperClient.csproj">
       <Project>{cbba289f-8e61-4fea-8191-2794402c1333}</Project>
       <Name>LegacyWrapperClient</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestLibrary\LegacyWrapperTestDll64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestLibrary\LegacyWrapperTestDll32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

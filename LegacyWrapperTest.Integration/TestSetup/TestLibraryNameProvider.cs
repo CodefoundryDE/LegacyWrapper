@@ -8,7 +8,7 @@ using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Configuration;
 using LegacyWrapperClient.DynamicProxy;
 
-namespace LegacyWrapperTest.TestSetup
+namespace LegacyWrapperTest.Integration.TestSetup
 {
     class TestLibraryNameProvider : ILibraryNameProvider
     {

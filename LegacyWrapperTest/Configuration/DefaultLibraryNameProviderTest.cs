@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using LegacyWrapper.Common.Attributes;
 using LegacyWrapperClient.Configuration;
-using LegacyWrapperTest.TestSetup;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LegacyWrapperTest.Configuration

@@ -7,11 +7,11 @@ using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
 using LegacyWrapperClient.Configuration;
 using LegacyWrapperClient.DynamicProxy;
-using LegacyWrapperTest.Interface;
-using LegacyWrapperTest.TestSetup;
+using LegacyWrapperTest.Integration.Interface;
+using LegacyWrapperTest.Integration.TestSetup;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LegacyWrapperTest.Client
+namespace LegacyWrapperTest.Integration.Client
 {
     /// <summary>
     /// Here we're going to determine if we're running as 32 bit or 64 bit process - and use the opposing wrapper.

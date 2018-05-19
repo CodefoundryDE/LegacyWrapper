@@ -32,6 +32,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LegacyWrapperTestDll", "Leg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapper", "LegacyWrapper\LegacyWrapper.csproj", "{17758936-6BBB-4BB3-BF4B-F75C5033A179}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapperTest.Integration", "LegacyWrapperTest.Integration\LegacyWrapperTest.Integration.csproj", "{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +126,18 @@ Global
 		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Release|x64.Build.0 = Release|Any CPU
 		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Release|x86.ActiveCfg = Release|Any CPU
 		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Release|x86.Build.0 = Release|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Debug|x64.Build.0 = Debug|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Debug|x86.Build.0 = Debug|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Release|x64.ActiveCfg = Release|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Release|x64.Build.0 = Release|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Release|x86.ActiveCfg = Release|Any CPU
+		{D8A020B8-47C8-40A7-93C5-A9CCAF296A0C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
