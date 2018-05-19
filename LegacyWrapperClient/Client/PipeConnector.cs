@@ -31,33 +31,28 @@ namespace LegacyWrapperClient.Client
         private bool _isDisposed;
 
         private NamedPipeClientStream _pipe;
-        private Process _wrapperProcess;
 
-        private readonly IWrapperConfig _configuration;
         private readonly IFormatter _formatter;
+        private readonly IWrapperProcessStarter _wrapperProcessStarter;
         private readonly PipeToken _pipeToken;
-        private readonly IWrapperExecutableNameProvider _wrapperExecutableNameProvider;
 
         /// <summary>
         /// Creates a new WrapperClient instance.
         /// </summary>
-        /// <param name="configuration">WrapperConfiguration object holding configuration info.</param>
         /// <param name="formatter">Formatter instance for data serialization to the pipe.</param>
+        /// <param name="wrapperProcessStarter">WrapperProcessStarter instance for invoking the appropriate wrapper executable.</param>
         /// <param name="pipeToken">PipeToken instance for creating pipe connections.</param>
-        /// <param name="wrapperExecutableNameProvider">Provides the name for the wrapper executable to start.</param>
-        public PipeConnector(IWrapperConfig configuration, IFormatter formatter, PipeToken pipeToken, IWrapperExecutableNameProvider wrapperExecutableNameProvider)
+        public PipeConnector(IFormatter formatter, IWrapperProcessStarter wrapperProcessStarter, PipeToken pipeToken)
         {
-            Raise.ArgumentNullException.IfIsNull(configuration, nameof(configuration));
             Raise.ArgumentNullException.IfIsNull(formatter, nameof(formatter));
+            Raise.ArgumentNullException.IfIsNull(wrapperProcessStarter, nameof(wrapperProcessStarter));
             Raise.ArgumentNullException.IfIsNull(pipeToken, nameof(pipeToken));
-            Raise.ArgumentNullException.IfIsNull(wrapperExecutableNameProvider, nameof(wrapperExecutableNameProvider));
-
-            _configuration = configuration;
+            
             _formatter = formatter;
+            _wrapperProcessStarter = wrapperProcessStarter;
             _pipeToken = pipeToken;
-            _wrapperExecutableNameProvider = wrapperExecutableNameProvider;
 
-            StartWrapperProcess();
+            _wrapperProcessStarter.StartWrapperProcess();
             OpenPipe();
         }
 
@@ -76,21 +71,6 @@ namespace LegacyWrapperClient.Client
             }
 
             return callResult;
-        }
-
-        private void StartWrapperProcess()
-        {
-            string wrapperName = _wrapperExecutableNameProvider.GetWrapperExecutableName(_configuration);
-
-            _wrapperProcess = Process.Start(wrapperName, _pipeToken.Token);
-        }
-
-        private void StopWrapperProcess()
-        {
-            if (!_wrapperProcess.HasExited)
-            {
-                _wrapperProcess.Close();
-            }
         }
 
         private void OpenPipe()
@@ -138,9 +118,9 @@ namespace LegacyWrapperClient.Client
             if (disposing)
             {
                 ClosePipe();
-                StopWrapperProcess();
                 _pipe.Dispose();
-                _wrapperProcess.Dispose();
+
+                _wrapperProcessStarter.Dispose();
             }
 
             // Free any unmanaged objects here.

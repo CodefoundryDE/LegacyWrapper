@@ -57,7 +57,9 @@
   <ItemGroup>
     <Compile Include="Architecture\TargetArchitecture.cs" />
     <Compile Include="Client\IPipeConnector.cs" />
+    <Compile Include="Client\IWrapperProcessStarter.cs" />
     <Compile Include="Client\WrapperClient.cs" />
+    <Compile Include="Client\WrapperProcessStarter.cs" />
     <Compile Include="Configuration\DefaultWrapperExecutableNameProvider.cs" />
     <Compile Include="Configuration\ILibraryNameProvider.cs" />
     <Compile Include="Configuration\DefaultLibraryNameProvider.cs" />
