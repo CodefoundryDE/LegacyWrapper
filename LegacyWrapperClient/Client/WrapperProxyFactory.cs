@@ -9,6 +9,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
+using LegacyWrapper.Common.Token;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Configuration;
 using LegacyWrapperClient.DynamicProxy;
@@ -39,6 +40,8 @@ namespace LegacyWrapperClient.Client
             InjectionKernel.Bind<ITokenGenerator>().To<GuidTokenGenerator>();
             InjectionKernel.Bind<ILibraryNameProvider>().To<DefaultLibraryNameProvider>();
             InjectionKernel.Bind<IWrapperExecutableNameProvider>().To<DefaultWrapperExecutableNameProvider>();
+
+            CreateToken();
         }
 
         private static TFunctions CreateProxy()
@@ -64,6 +67,13 @@ namespace LegacyWrapperClient.Client
             InjectionKernel.Rebind<Type>().ToConstant(typeof(TFunctions));
 
             return CreateProxy();
+        }
+
+        private static void CreateToken()
+        {
+            ITokenGenerator tokenGenerator = InjectionKernel.Get<ITokenGenerator>();
+
+            InjectionKernel.Bind<PipeToken>().ToMethod(context => tokenGenerator.GenerateToken());
         }
     }
 }

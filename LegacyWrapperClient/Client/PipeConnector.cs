@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LegacyWrapper.Common.Attributes;
 using LegacyWrapper.Common.Serialization;
+using LegacyWrapper.Common.Token;
 using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Configuration;
@@ -34,7 +35,7 @@ namespace LegacyWrapperClient.Client
 
         private readonly IWrapperConfig _configuration;
         private readonly IFormatter _formatter;
-        private readonly string _token;
+        private readonly PipeToken _pipeToken;
         private readonly IWrapperExecutableNameProvider _wrapperExecutableNameProvider;
 
         /// <summary>
@@ -42,18 +43,18 @@ namespace LegacyWrapperClient.Client
         /// </summary>
         /// <param name="configuration">WrapperConfiguration object holding configuration info.</param>
         /// <param name="formatter">Formatter instance for data serialization to the pipe.</param>
-        /// <param name="tokenGenerator">ITokenGenerator instance for generating connection tokens.</param>
+        /// <param name="pipeToken">PipeToken instance for creating pipe connections.</param>
         /// <param name="wrapperExecutableNameProvider">Provides the name for the wrapper executable to start.</param>
-        public PipeConnector(IWrapperConfig configuration, IFormatter formatter, ITokenGenerator tokenGenerator, IWrapperExecutableNameProvider wrapperExecutableNameProvider)
+        public PipeConnector(IWrapperConfig configuration, IFormatter formatter, PipeToken pipeToken, IWrapperExecutableNameProvider wrapperExecutableNameProvider)
         {
             Raise.ArgumentNullException.IfIsNull(configuration, nameof(configuration));
             Raise.ArgumentNullException.IfIsNull(formatter, nameof(formatter));
-            Raise.ArgumentNullException.IfIsNull(tokenGenerator, nameof(tokenGenerator));
+            Raise.ArgumentNullException.IfIsNull(pipeToken, nameof(pipeToken));
             Raise.ArgumentNullException.IfIsNull(wrapperExecutableNameProvider, nameof(wrapperExecutableNameProvider));
 
             _configuration = configuration;
             _formatter = formatter;
-            _token = tokenGenerator.GenerateToken();
+            _pipeToken = pipeToken;
             _wrapperExecutableNameProvider = wrapperExecutableNameProvider;
 
             StartWrapperProcess();
@@ -81,7 +82,7 @@ namespace LegacyWrapperClient.Client
         {
             string wrapperName = _wrapperExecutableNameProvider.GetWrapperExecutableName(_configuration);
 
-            _wrapperProcess = Process.Start(wrapperName, _token);
+            _wrapperProcess = Process.Start(wrapperName, _pipeToken.Token);
         }
 
         private void StopWrapperProcess()
@@ -94,7 +95,7 @@ namespace LegacyWrapperClient.Client
 
         private void OpenPipe()
         {
-            _pipe = new NamedPipeClientStream(LocalPipeUrl, _token, PipeDirection.InOut);
+            _pipe = new NamedPipeClientStream(LocalPipeUrl, _pipeToken.Token, PipeDirection.InOut);
             _pipe.Connect();
             _pipe.ReadMode = PipeTransmissionMode.Message;
         }
