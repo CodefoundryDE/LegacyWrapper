@@ -13,6 +13,8 @@ namespace LegacyWrapper.Transport
 {
     internal class PipeServer : IPipeServer
     {
+        private bool _isDisposed = false;
+
         private readonly IFormatter _formatter;
         private readonly PipeToken _pipeToken;
 
@@ -39,6 +41,14 @@ namespace LegacyWrapper.Transport
             _pipe.WaitForConnection();
         }
 
+        private void ClosePipeServer()
+        {
+            if (_pipe.IsConnected)
+            {
+                _pipe.Close();
+            }
+        }
+
         public void SendCallResponse(CallResult callResult)
         {
             _formatter.Serialize(_pipe, callResult);
@@ -50,6 +60,37 @@ namespace LegacyWrapper.Transport
 
             return callData;
         }
+
+        #region IDisposable-Implementation
+        ~PipeServer()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                ClosePipeServer();
+                _pipe.Dispose();
+            }
+
+            // Free any unmanaged objects here.
+
+            _isDisposed = true;
+        }
+        #endregion
     }
 
 }

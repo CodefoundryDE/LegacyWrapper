@@ -7,7 +7,7 @@ using LegacyWrapper.Common.Serialization;
 
 namespace LegacyWrapper.Transport
 {
-    interface IPipeServer
+    interface IPipeServer : IDisposable
     {
         void SendCallResponse(CallResult callResult);
         CallData ReceiveCallRequest();
