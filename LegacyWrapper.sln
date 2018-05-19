@@ -21,6 +21,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{22EB660B-6C72-4378-BF0C-D8A85E0D33B3}"
 	ProjectSection(SolutionItems) = preProject
 		Changelog.md = Changelog.md
+		CommonSettings.targets = CommonSettings.targets
+		DefaultSettings.items = DefaultSettings.items
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
 		LICENSE = LICENSE
 		Readme.md = Readme.md
@@ -29,6 +31,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapper.Common", "LegacyWrapper.Common\LegacyWrapper.Common.csproj", "{B9E346E3-ED4F-4824-B780-825D87BE9D48}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LegacyWrapperTestDll", "LegacyWrapperTestDll\LegacyWrapperTestDll.vcxproj", "{E53A4D07-C345-4C92-B1B6-F0E72BA7262E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyWrapper", "LegacyWrapper\LegacyWrapper.csproj", "{17758936-6BBB-4BB3-BF4B-F75C5033A179}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,6 +114,18 @@ Global
 		{E53A4D07-C345-4C92-B1B6-F0E72BA7262E}.Release|x64.Build.0 = Release|x64
 		{E53A4D07-C345-4C92-B1B6-F0E72BA7262E}.Release|x86.ActiveCfg = Release|Win32
 		{E53A4D07-C345-4C92-B1B6-F0E72BA7262E}.Release|x86.Build.0 = Release|Win32
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Debug|x64.Build.0 = Debug|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Debug|x86.Build.0 = Debug|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Release|x64.ActiveCfg = Release|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Release|x64.Build.0 = Release|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Release|x86.ActiveCfg = Release|Any CPU
+		{17758936-6BBB-4BB3-BF4B-F75C5033A179}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

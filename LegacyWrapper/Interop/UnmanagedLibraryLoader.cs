@@ -9,7 +9,7 @@ using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
 using PommaLabs.Thrower;
 
-namespace LegacyWrapper.Common.Interop
+namespace LegacyWrapper.Interop
 {
     internal class UnmanagedLibraryLoader
     {

@@ -1,5 +1,6 @@
+using System.Diagnostics;
 using System.Runtime.ExceptionServices;
-using LegacyWrapper.Common.Wrapper;
+using LegacyWrapper.Handler;
 using PommaLabs.Thrower;
 
 namespace LegacyWrapper64
@@ -15,8 +16,9 @@ namespace LegacyWrapper64
         /// </param>
         static void Main(string[] args)
         {
-            WrapperHelper wrapperHelper = new WrapperHelper(args);
-            wrapperHelper.Call();
+            //Debugger.Launch();
+            ICallRequestHandler requestHandler = CallRequestHandlerFactory.GetInstance(args);
+            requestHandler.Call();
         }
     }
 }

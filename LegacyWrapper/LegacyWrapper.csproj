@@ -1,17 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B9E346E3-ED4F-4824-B780-825D87BE9D48}</ProjectGuid>
+    <ProjectGuid>{17758936-6BBB-4BB3-BF4B-F75C5033A179}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LegacyWrapper.Common</RootNamespace>
-    <AssemblyName>LegacyWrapper.Common</AssemblyName>
+    <RootNamespace>LegacyWrapper</RootNamespace>
+    <AssemblyName>LegacyWrapper</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\LegacyWrapper.Common.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,9 +28,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\LegacyWrapper.Common.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="PommaLabs.Thrower, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
       <HintPath>..\packages\Thrower.4.3.1\lib\net45\PommaLabs.Thrower.dll</HintPath>
     </Reference>
@@ -47,27 +47,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\LegacyDllImportAttribute.cs" />
-    <Compile Include="Attributes\LegacyDllMethodAttribute.cs" />
-    <Compile Include="ErrorHandling\LegacyWrapperException.cs" />
+    <Compile Include="Handler\ICallRequestHandler.cs" />
+    <Compile Include="Interop\UnmanagedLibraryLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\GlobalAssemblyInfo.cs">
-      <Link>GlobalAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Serialization\CallData.cs" />
-    <Compile Include="Serialization\CallResult.cs" />
-    <Compile Include="Token\PipeToken.cs" />
+    <Compile Include="Handler\CallRequestHandler.cs" />
+    <Compile Include="Handler\CallRequestHandlerFactory.cs" />
+    <Compile Include="Transport\IPipeServer.cs" />
+    <Compile Include="Transport\PipeServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LegacyWrapper.Common\LegacyWrapper.Common.csproj">
+      <Project>{b9e346e3-ed4f-4824-b780-825d87be9d48}</Project>
+      <Name>LegacyWrapper.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
