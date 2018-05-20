@@ -22,3 +22,4 @@ using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("LegacyWrapperTest")]
 [assembly: InternalsVisibleTo("LegacyWrapperTest.Integration")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")] // For moq

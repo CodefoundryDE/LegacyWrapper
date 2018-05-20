@@ -7,7 +7,7 @@ using LegacyWrapper.Common.Attributes;
 using LegacyWrapperClient.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LegacyWrapperTest.Configuration
+namespace LegacyWrapperTest.LegacyWrapperClient.Configuration
 {
     [TestClass]
     public class DefaultLibraryNameProviderTest

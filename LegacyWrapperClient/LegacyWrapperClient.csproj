@@ -66,6 +66,8 @@
     <Compile Include="Configuration\IWrapperExecutableNameProvider.cs" />
     <Compile Include="Token\ITokenGenerator.cs" />
     <Compile Include="Token\GuidTokenGenerator.cs" />
+    <Compile Include="Transport\ITransportImplementation.cs" />
+    <Compile Include="Transport\PipeStreamFactory.cs" />
     <Compile Include="Transport\PipeConnector.cs" />
     <Compile Include="Client\WrapperProxyFactory.cs" />
     <Compile Include="Configuration\IWrapperConfig.cs" />

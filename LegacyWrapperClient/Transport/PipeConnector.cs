@@ -28,14 +28,13 @@ namespace LegacyWrapperClient.Transport
 {
     internal class PipeConnector : IPipeConnector
     {
-        private const string LocalPipeUrl = ".";
-
         private bool _isDisposed;
 
-        private NamedPipeClientStream _pipe;
+        private PipeStream _pipe;
 
         private readonly IFormatter _formatter;
         private readonly IWrapperProcessStarter _wrapperProcessStarter;
+        private readonly PipeStreamFactory _pipeStreamFactory;
         private readonly PipeToken _pipeToken;
 
         /// <summary>
@@ -43,15 +42,18 @@ namespace LegacyWrapperClient.Transport
         /// </summary>
         /// <param name="formatter">Formatter instance for data serialization to the pipe.</param>
         /// <param name="wrapperProcessStarter">WrapperProcessStarter instance for invoking the appropriate wrapper executable.</param>
+        /// <param name="pipeStreamFactory">A factory instance to create a new NamedPipeClientStream.</param>
         /// <param name="pipeToken">PipeToken instance for creating pipe connections.</param>
-        public PipeConnector(IFormatter formatter, IWrapperProcessStarter wrapperProcessStarter, PipeToken pipeToken)
+        public PipeConnector(IFormatter formatter, IWrapperProcessStarter wrapperProcessStarter, PipeStreamFactory pipeStreamFactory, PipeToken pipeToken)
         {
             Raise.ArgumentNullException.IfIsNull(formatter, nameof(formatter));
             Raise.ArgumentNullException.IfIsNull(wrapperProcessStarter, nameof(wrapperProcessStarter));
+            Raise.ArgumentNullException.IfIsNull(pipeStreamFactory, nameof(pipeStreamFactory));
             Raise.ArgumentNullException.IfIsNull(pipeToken, nameof(pipeToken));
             
             _formatter = formatter;
             _wrapperProcessStarter = wrapperProcessStarter;
+            _pipeStreamFactory = pipeStreamFactory;
             _pipeToken = pipeToken;
 
             _wrapperProcessStarter.StartWrapperProcess();
@@ -77,9 +79,7 @@ namespace LegacyWrapperClient.Transport
 
         private void OpenPipe()
         {
-            _pipe = new NamedPipeClientStream(LocalPipeUrl, _pipeToken.Token, PipeDirection.InOut);
-            _pipe.Connect();
-            _pipe.ReadMode = PipeTransmissionMode.Message;
+            _pipe = _pipeStreamFactory.GetConnectedPipeStream(_pipeToken);
         }
 
         private void ClosePipe()
