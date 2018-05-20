@@ -17,5 +17,22 @@ namespace LegacyWrapper.Common.Token
 
             Token = token;
         }
+
+        public bool Equals(PipeToken other)
+        {
+            return other != null &&
+                   Token == other.Token;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is PipeToken other &&
+                   Token == other.Token;
+        }
+
+        public override int GetHashCode()
+        {
+            return Token.GetHashCode();
+        }
     }
 }
