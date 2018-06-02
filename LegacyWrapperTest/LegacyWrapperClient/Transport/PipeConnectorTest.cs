@@ -41,7 +41,7 @@ namespace LegacyWrapperTest.LegacyWrapperClient.Transport
 
             pipeConnector.SendCallRequest(callDataToSend);
 
-            pipeStreamFactoryMock.Verify(mock => mock.GetConnectedPipeStream(It.Is<PipeToken>(actual => Equals(actual, pipeToken))));
+            pipeStreamFactoryMock.Verify(mock => mock.GetConnectedPipeStream(It.Is<PipeToken>(actual => Equals(actual, pipeToken))), Times.Once);
         }
 
         [TestMethod]
@@ -57,7 +57,7 @@ namespace LegacyWrapperTest.LegacyWrapperClient.Transport
 
             pipeConnector.SendCallRequest(callDataToSend);
 
-            formatterMock.Verify(mock => mock.Serialize(It.IsAny<PipeStream>(), It.Is<CallData>(actual => ReferenceEquals(actual, callDataToSend))));
+            formatterMock.Verify(mock => mock.Serialize(It.IsAny<PipeStream>(), It.Is<CallData>(actual => ReferenceEquals(actual, callDataToSend))), Times.AtLeast(1));
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace LegacyWrapperTest.LegacyWrapperClient.Transport
 
             CallResult actualCallResult = pipeConnector.ReceiveCallResponse();
 
-            formatterMock.Verify(mock => mock.Deserialize(It.IsAny<PipeStream>()));
+            formatterMock.Verify(mock => mock.Deserialize(It.IsAny<PipeStream>()), Times.AtLeast(1));
             Assert.AreEqual(callResultToFetch, actualCallResult);
         }
 
@@ -119,7 +119,7 @@ namespace LegacyWrapperTest.LegacyWrapperClient.Transport
 
             pipeConnector.Dispose();
 
-            formatterMock.Verify(mock => mock.Serialize(It.IsAny<PipeStream>(), It.Is<CallData>(actual => actual.Status.Equals(KeepAliveStatus.Close))));
+            formatterMock.Verify(mock => mock.Serialize(It.IsAny<PipeStream>(), It.Is<CallData>(actual => actual.Status.Equals(KeepAliveStatus.Close))), Times.AtLeast(1));
         }
     }
 }

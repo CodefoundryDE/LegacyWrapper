@@ -8,6 +8,6 @@ namespace LegacyWrapperClient.Configuration
 {
     internal interface IWrapperExecutableNameProvider
     {
-        string GetWrapperExecutableName(IWrapperConfig configuration);
+        string GetWrapperExecutableName();
     }
 }

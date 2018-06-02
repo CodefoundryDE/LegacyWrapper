@@ -17,11 +17,18 @@ namespace LegacyWrapperClient.Configuration
             { TargetArchitecture.Amd64, "Codefoundry.LegacyWrapper64.exe" },
         };
 
-        public string GetWrapperExecutableName(IWrapperConfig configuration)
+        private readonly IWrapperConfig _configuration;
+
+        public DefaultWrapperExecutableNameProvider(IWrapperConfig configuration)
         {
             Raise.ArgumentNullException.IfIsNull(configuration);
 
-            return _wrapperNames[configuration.TargetArchitecture];
+            _configuration = configuration;
+        }
+
+        public string GetWrapperExecutableName()
+        {
+            return _wrapperNames[_configuration.TargetArchitecture];
         }
     }
 }

@@ -44,6 +44,7 @@ namespace LegacyWrapperClient.Client
             InjectionKernel.Bind<IWrapperExecutableNameProvider>().To<DefaultWrapperExecutableNameProvider>();
             InjectionKernel.Bind<IWrapperProcessStarter>().To<WrapperProcessStarter>();
             InjectionKernel.Bind<PipeStreamFactory>().ToSelf().InSingletonScope();
+            InjectionKernel.Bind<IProcessFactory>().To<ProcessFactory>();
         }
 
         private static TFunctions CreateProxy()

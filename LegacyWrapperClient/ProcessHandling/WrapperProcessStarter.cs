@@ -14,39 +14,40 @@ namespace LegacyWrapperClient.ProcessHandling
     {
         private bool _isDisposed;
 
-        private System.Diagnostics.Process _wrapperProcess;
+        private MockableProcess _wrapperProcess;
 
-        private readonly IWrapperConfig _configuration;
         private readonly IWrapperExecutableNameProvider _wrapperExecutableNameProvider;
         private readonly PipeToken _pipeToken;
+        private readonly IProcessFactory _processFactory;
 
         /// <summary>
         /// Creates a new WrapperProcessStarter instance.
         /// </summary>
         /// <param name="wrapperExecutableNameProvider">Provides the name for the wrapper executable to start.</param>
-        /// <param name="configuration">WrapperConfiguration object holding configuration info.</param>
         /// <param name="pipeToken">PipeToken instance for creating pipe connections.</param>
-        public WrapperProcessStarter(IWrapperExecutableNameProvider wrapperExecutableNameProvider, IWrapperConfig configuration, PipeToken pipeToken)
+        /// <param name="processFactory">IProcessFactory instance for creating a new wrapper process</param>
+        public WrapperProcessStarter(IWrapperExecutableNameProvider wrapperExecutableNameProvider, PipeToken pipeToken, IProcessFactory processFactory)
         {
             Raise.ArgumentNullException.IfIsNull(wrapperExecutableNameProvider, nameof(wrapperExecutableNameProvider));
-            Raise.ArgumentNullException.IfIsNull(configuration, nameof(configuration));
             Raise.ArgumentNullException.IfIsNull(pipeToken, nameof(pipeToken));
+            Raise.ArgumentNullException.IfIsNull(processFactory);
 
             _wrapperExecutableNameProvider = wrapperExecutableNameProvider;
-            _configuration = configuration;
             _pipeToken = pipeToken;
+            _processFactory = processFactory;
         }
 
         public void StartWrapperProcess()
         {
-            string wrapperName = _wrapperExecutableNameProvider.GetWrapperExecutableName(_configuration);
+            string wrapperName = _wrapperExecutableNameProvider.GetWrapperExecutableName();
 
-            _wrapperProcess = Process.Start(wrapperName, _pipeToken.Token);
+            _wrapperProcess = _processFactory.GetProcess(wrapperName, _pipeToken.Token);
+            _wrapperProcess.Start();
         }
 
         private void StopWrapperProcess()
         {
-            if (!_wrapperProcess.HasExited)
+            if (!_wrapperProcess.HasExited) 
             {
                 _wrapperProcess.Close();
             }

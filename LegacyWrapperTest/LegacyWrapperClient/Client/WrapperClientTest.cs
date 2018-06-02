@@ -20,8 +20,8 @@ namespace LegacyWrapperTest.LegacyWrapperClient.Client
 
             wrapperClient.InvokeInternal(new CallData() { Parameters = new object[0] });
 
-            pipeConnectorMock.Verify(m => m.SendCallRequest(It.IsAny<CallData>()), Times.Exactly(1));
-            pipeConnectorMock.Verify(m => m.ReceiveCallResponse(), Times.Exactly(1));
+            pipeConnectorMock.Verify(m => m.SendCallRequest(It.IsAny<CallData>()), Times.Once);
+            pipeConnectorMock.Verify(m => m.ReceiveCallResponse(), Times.Once);
         }
 
         [TestMethod]
