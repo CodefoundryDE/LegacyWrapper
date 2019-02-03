@@ -15,25 +15,27 @@ There is a NuGet package available here: [Codefoundry.LegacyWrapper @ nuget.org]
 If you want to compile the LegacyWrapper yourself, make sure to place both the wrapper executable, LegacyWrapperClient.dll and LegacyWrapper.Common.dll in your directory.
 
 ```csharp
-// Define delegate matching DLL function
-private delegate int GetSystemMetrics(int index);
-
-// Create new WrapperClient
-// Remember to ensure a call to the Dispose()-Method!
-using (var client = new WrapperClient("User32.dll"))
+// Define a proxy interface with matching method names and signatures
+// The interface must be derived from IDisposable!
+[LegacyDllImport("User32.dll")]
+public interface IUser32Dll : IDisposable
 {
-    // Make calls providing library name, function name, and parameters
-    int x = (int)client.Invoke<GetSystemMetrics>("GetSystemMetrics", new object[] { 0 });
-    int y = (int)client.Invoke<GetSystemMetrics>("GetSystemMetrics", new object[] { 1 });
+    [LegacyDllMethod(CallingConvention = CallingConvention.Winapi)]
+    int GetSystemMetrics(int nIndex);
 }
-```
 
-The constructor takes an optional second parameter where you can specify the target architecture (it defaults to X86):
+// Create configuration
+IWrapperConfig configuration = WrapperConfigBuilder.Create()
+        .TargetArchitecture(TargetArchitecture.X86)
+        .Build();
 
-```csharp
-using (var client = new WrapperClient(TestDllPath, TargetArchitecture.Amd64))
+// Create new Wrapper client providing the proxy interface
+// Remember to ensure a call to the Dispose()-Method!
+using (var client = WrapperProxyFactory<IUser32Dll>.GetInstance(configuration))
 {
-    result = (int)client.Invoke<TestStdCallDelegate>("TestStdCall", new object[] { input });
+    // Make calls - it's that simple!
+    int x = client.GetSystemMetrics(0);
+    int y = client.GetSystemMetrics(1);
 }
 ```
 

@@ -9,15 +9,21 @@
 ```csharp
 // Define a proxy interface with matching method names and signatures
 // The interface must be derived from IDisposable!
+[LegacyDllImport("User32.dll")]
 public interface IUser32Dll : IDisposable
 {
-    [LegacyDllImport("User32.dll", CallingConvention = CallingConvention.Winapi)]
+    [LegacyDllMethod(CallingConvention = CallingConvention.Winapi)]
     int GetSystemMetrics(int nIndex);
 }
 
+// Create configuration
+IWrapperConfig configuration = WrapperConfigBuilder.Create()
+        .TargetArchitecture(TargetArchitecture.X86)
+        .Build();
+
 // Create new Wrapper client providing the proxy interface
 // Remember to ensure a call to the Dispose()-Method!
-using (var client = WrapperClientFactory<IUser32Dll>.CreateWrapperClient())
+using (var client = WrapperProxyFactory<IUser32Dll>.GetInstance(configuration))
 {
     // Make calls - it's that simple!
     int x = client.GetSystemMetrics(0);
