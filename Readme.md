@@ -41,18 +41,12 @@ using (var client = WrapperProxyFactory<IUser32Dll>.GetInstance(configuration))
 
 Please note that loading a 64bit dll will only work on 64bit operating systems.
 
-### ref parameters
-
-If your delegate contains `ref` parameters, the object array passed as parameters to the `Invoke<T>` method will contain the updated values afterwards.
-
-## Todo (maybe)
-
-* Support for Attributes like `[CallingConvention]`.
-* Type safe usage of generics in Call<T>-Method
-
 ## Further reading
 
-View [this blog post](https://codefoundry.de/programming/2015/09/28/legacy-wrapper-invoking-an-unmanaged-32bit-library-out-of-a-64bit-process.html) to obtain a basic understanding of how the library works internally. [There is also a blog post about the new 64bit feature in LegacyWrapper 2.1](https://codefoundry.de/programming/2017/08/20/legacywrapper-2-1-is-out.html).
+View [this blog post](https://codefoundry.de/programming/2015/09/28/legacy-wrapper-invoking-an-unmanaged-32bit-library-out-of-a-64bit-process.html) to obtain a basic understanding of how the library works internally. 
+
+* [There is also a blog post about the dynamic method call feature in LegacyWrapper 3.0](https://codefoundry.de/programming/2019/02/03/legacywrapper-3-0-released.html).
+* [There is also a blog post about the new 64bit feature in LegacyWrapper 2.1](https://codefoundry.de/programming/2017/08/20/legacywrapper-2-1-is-out.html).
 
 ## Contributing
 
