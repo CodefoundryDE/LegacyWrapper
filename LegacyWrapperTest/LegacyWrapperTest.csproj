@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="LegacyWrapperClient\Client\WrapperClientTest.cs" />
     <Compile Include="LegacyWrapperClient\Configuration\DefaultLibraryNameProviderTest.cs" />
+    <Compile Include="LegacyWrapperClient\DynamicProxy\WrapperClientInterceptorTest.cs" />
     <Compile Include="LegacyWrapperClient\ProcessHandling\WrapperProcessStarterTest.cs" />
     <Compile Include="LegacyWrapperClient\Token\GuidTokenGeneratorTest.cs" />
     <Compile Include="LegacyWrapperClient\Transport\PipeConnectorTest.cs" />
