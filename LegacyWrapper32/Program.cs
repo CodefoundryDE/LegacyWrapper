@@ -1,5 +1,8 @@
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.ExceptionServices;
-using LegacyWrapper.Common.Wrapper;
+using LegacyWrapper.Handler;
+using PommaLabs.Thrower;
 
 namespace LegacyWrapper32
 {
@@ -12,10 +15,11 @@ namespace LegacyWrapper32
         /// The first parameter is expected to be a string.
         /// The Wrapper will use this string to create a named pipe.
         /// </param>
-        [HandleProcessCorruptedStateExceptions]
         static void Main(string[] args)
         {
-            WrapperHelper.Call(args);
+            //Debugger.Launch();
+            ICallRequestHandler requestHandler = CallRequestHandlerFactory.GetInstance(args);
+            requestHandler.Call();
         }   
     }
 }

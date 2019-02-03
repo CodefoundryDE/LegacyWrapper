@@ -6,9 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using LegacyWrapper.Common.Attributes;
+using LegacyWrapper.Common.Serialization;
 using LegacyWrapper.ErrorHandling;
 using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
+using LegacyWrapperClient.Configuration;
+using PommaLabs.Thrower;
 
 namespace LegacyWrapperClient.DynamicProxy
 {
@@ -17,50 +20,62 @@ namespace LegacyWrapperClient.DynamicProxy
     /// </summary>
     internal class WrapperClientInterceptor : IInterceptor, IDisposable
     {
-        /// <summary>
-        /// This is an internal Property that is used for testing purposes.
-        /// </summary>
-        internal static string OverrideLibraryName = null;
-
         private bool _isDisposed = false;
 
         private readonly WrapperClient _wrapperClient;
         private readonly Type _interfaceType;
+        private readonly ILibraryNameProvider _libraryNameProvider;
 
-        public WrapperClientInterceptor(Type interfaceType, TargetArchitecture targetArchitecture)
+        public WrapperClientInterceptor(Type interfaceType, WrapperClient wrapperClient, ILibraryNameProvider libraryNameProvider)
         {
-            _wrapperClient = new WrapperClient(targetArchitecture);
+            Raise.ArgumentNullException.IfIsNull(interfaceType, nameof(interfaceType));
+            Raise.ArgumentNullException.IfIsNull(wrapperClient, nameof(wrapperClient));
+            Raise.ArgumentNullException.IfIsNull(libraryNameProvider, nameof(libraryNameProvider));
+
             _interfaceType = interfaceType;
+            _wrapperClient = wrapperClient;
+            _libraryNameProvider = libraryNameProvider;
         }
 
         public void Intercept(IInvocation invocation)
         {
-            AssertIsNotDesposed();
+            Raise.ObjectDisposedException.If(_isDisposed, nameof(WrapperClientInterceptor));
 
-            string methodName = invocation.Method.Name;
-
-            // Early out if it'a call to Dispose()
-            if (methodName == nameof(IDisposable.Dispose))
+            // Early out if it's a call to Dispose()
+            if (invocation.Method.Name == nameof(IDisposable.Dispose))
             {
-                _wrapperClient.Dispose();
-                _isDisposed = true;
+                Dispose();
                 return;
             }
 
-            object[] parameters = invocation.Arguments;
-            Type[] parameterTypes = invocation.Method.GetParameters().Select(x => x.ParameterType).ToArray();
+            Type[] parameterTypes = GetParameterTypesFromInvocation(invocation);
             Type returnType = invocation.Method.ReturnType;
 
-            var dllImportAttribute = GetLegacyAttribute<LegacyDllImportAttribute>(_interfaceType);
-            var dllMethodAttribute = GetLegacyAttribute<LegacyDllMethodAttribute>(invocation.Method);
+            LegacyDllImportAttribute dllImportAttribute = GetLegacyAttribute<LegacyDllImportAttribute>(_interfaceType);
+            LegacyDllMethodAttribute dllMethodAttribute = GetLegacyAttribute<LegacyDllMethodAttribute>(invocation.Method);
 
-            string libraryName = dllImportAttribute.LibraryName;
-            if (OverrideLibraryName != null)
+            string libraryName = _libraryNameProvider.GetLibraryName(dllImportAttribute);
+
+            var callData = new CallData
             {
-                libraryName = OverrideLibraryName;
-            }
+                LibraryName = libraryName,
+                ProcedureName = invocation.Method.Name,
+                Parameters = invocation.Arguments,
+                ParameterTypes = parameterTypes,
+                ReturnType = returnType,
+                CallingConvention = dllMethodAttribute.CallingConvention,
+                CharSet = dllMethodAttribute.CharSet,
+            };
 
-            invocation.ReturnValue = _wrapperClient.InvokeInternal(libraryName, methodName, parameters, parameterTypes, returnType, dllMethodAttribute);
+            invocation.ReturnValue = _wrapperClient.InvokeInternal(callData);
+        }
+
+        private Type[] GetParameterTypesFromInvocation(IInvocation invocation)
+        {
+            return invocation.Method
+                .GetParameters()
+                .Select(x => x.ParameterType)
+                .ToArray();
         }
 
         private static T GetLegacyAttribute<T>(MemberInfo attributeProvider) where T : Attribute
@@ -69,19 +84,9 @@ namespace LegacyWrapperClient.DynamicProxy
                 .Cast<T>()
                 .ToArray();
 
-            if (dllImportAttributes.Length != 1)
-            {
-                throw new LegacyWrapperException($"{attributeProvider.Name} must contain exactly one {typeof(T).Name}");
-            }
-            return dllImportAttributes[0];
-        }
+            Raise<LegacyWrapperException>.IfNot(dllImportAttributes.Length == 1, $"{attributeProvider.Name} must contain exactly one {typeof(T).Name}");
 
-        private void AssertIsNotDesposed()
-        {
-            if (_isDisposed)
-            {
-                throw new ObjectDisposedException(nameof(_wrapperClient));
-            }
+            return dllImportAttributes[0];
         }
 
         #region IDisposable-Pattern

@@ -53,7 +53,11 @@
     <StartupObject>LegacyWrapper32.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PommaLabs.Thrower, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
+      <HintPath>..\packages\Thrower.4.3.1\lib\net45\PommaLabs.Thrower.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -72,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -86,9 +91,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LegacyWrapper.Common\LegacyWrapper.Common.csproj">
-      <Project>{B9E346E3-ED4F-4824-B780-825D87BE9D48}</Project>
-      <Name>LegacyWrapper.Common</Name>
+    <ProjectReference Include="..\LegacyWrapper\LegacyWrapper.csproj">
+      <Project>{17758936-6bbb-4bb3-bf4b-f75c5033a179}</Project>
+      <Name>LegacyWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -58,10 +58,6 @@ Feel free to submit any [suggestions/issues](https://github.com/CodefoundryDE/Le
 
 ## License
 
-Copyright (c) 2017, Franz Wimmer. (MIT License)
+Copyright (c) 2019, Franz Wimmer. (MIT License)
 
 See LICENSE for more info.
-
-## Credits
-
-This library includes [Nuane.Interop](https://github.com/lukaaash/Nuane.Interop) written by Lukas Pokorny.

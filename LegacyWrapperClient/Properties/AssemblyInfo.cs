@@ -6,5 +6,3 @@ using System.Runtime.CompilerServices;
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("LegacyWrapperClient")]
 [assembly: AssemblyProduct("LegacyWrapperClient")]
-
-[assembly: InternalsVisibleTo("LegacyWrapperTest")]

@@ -35,9 +35,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Core.4.2.0\lib\net45\Castle.Core.dll</HintPath>
+      <HintPath>..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="PommaLabs.Thrower, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
+      <HintPath>..\packages\Thrower.4.3.1\lib\net45\PommaLabs.Thrower.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,8 +56,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Architecture\TargetArchitecture.cs" />
+    <Compile Include="ProcessHandling\IProcessFactory.cs" />
+    <Compile Include="ProcessHandling\MockableProcess.cs"/>
+    <Compile Include="ProcessHandling\ProcessFactory.cs" />
+    <Compile Include="Transport\IPipeConnector.cs" />
+    <Compile Include="ProcessHandling\IWrapperProcessStarter.cs" />
     <Compile Include="Client\WrapperClient.cs" />
-    <Compile Include="Client\WrapperClientFactory.cs" />
+    <Compile Include="ProcessHandling\WrapperProcessStarter.cs" />
+    <Compile Include="Configuration\DefaultWrapperExecutableNameProvider.cs" />
+    <Compile Include="Configuration\ILibraryNameProvider.cs" />
+    <Compile Include="Configuration\DefaultLibraryNameProvider.cs" />
+    <Compile Include="Configuration\IWrapperExecutableNameProvider.cs" />
+    <Compile Include="Token\ITokenGenerator.cs" />
+    <Compile Include="Token\GuidTokenGenerator.cs" />
+    <Compile Include="Transport\PipeStreamFactory.cs" />
+    <Compile Include="Transport\PipeConnector.cs" />
+    <Compile Include="Client\WrapperProxyFactory.cs" />
+    <Compile Include="Configuration\IWrapperConfig.cs" />
+    <Compile Include="Configuration\WrapperConfig.cs" />
+    <Compile Include="Configuration\WrapperConfigBuilder.cs" />
     <Compile Include="DynamicProxy\WrapperClientInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\GlobalAssemblyInfo.cs">

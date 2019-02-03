@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\LegacyWrapper.Common.xml</DocumentationFile>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,7 +34,11 @@
     <DocumentationFile>bin\Release\LegacyWrapper.Common.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PommaLabs.Thrower, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
+      <HintPath>..\packages\Thrower.4.3.1\lib\net45\PommaLabs.Thrower.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,17 +51,16 @@
     <Compile Include="Attributes\LegacyDllImportAttribute.cs" />
     <Compile Include="Attributes\LegacyDllMethodAttribute.cs" />
     <Compile Include="ErrorHandling\LegacyWrapperException.cs" />
-    <Compile Include="Interop\NativeLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Serialization\CallData.cs" />
     <Compile Include="Serialization\CallResult.cs" />
-    <Compile Include="Wrapper\WrapperHelper.cs" />
+    <Compile Include="Token\PipeToken.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Interop\LICENSE" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

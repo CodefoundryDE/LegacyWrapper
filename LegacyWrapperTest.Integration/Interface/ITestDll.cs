@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LegacyWrapper.Common.Attributes;
 
-namespace LegacyWrapperTest.Interface
+namespace LegacyWrapperTest.Integration.Interface
 {
     // We assume the following dll functions in our Test.dll here: 
     // Every function is supposed to return the input parameter unchanged.

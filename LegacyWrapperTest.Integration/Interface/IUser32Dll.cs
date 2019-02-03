@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LegacyWrapper.Common.Attributes;
 
-namespace LegacyWrapperTest.Interface
+namespace LegacyWrapperTest.Integration.Interface
 {
     [LegacyDllImport("User32.dll")]
     public interface IUser32Dll : IDisposable
