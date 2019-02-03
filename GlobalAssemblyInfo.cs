@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("LegacyWrapper uses a wrapper process to call dlls from a process of the opposing architecture (X86 or AMD64).")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("codefoundry.de")]
-[assembly: AssemblyCopyright("Copyright (c) 2017, Franz Wimmer. (MIT License)")]
+[assembly: AssemblyCopyright("Copyright (c) 2019, Franz Wimmer. (MIT License)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -17,8 +17,8 @@ using System.Runtime.InteropServices;
 // COM aus zugreifen müssen, sollten Sie das ComVisible-Attribut für diesen Typ auf "True" festlegen.
 [assembly: ComVisible(false)]
 
-[assembly: AssemblyVersion("2.1.0.0")]
-[assembly: AssemblyFileVersion("2.1.0.0")]
+[assembly: AssemblyVersion("3.0.0.0")]
+[assembly: AssemblyFileVersion("3.0.0.0")]
 
 [assembly: InternalsVisibleTo("LegacyWrapperTest")]
 [assembly: InternalsVisibleTo("LegacyWrapperTest.Integration")]
