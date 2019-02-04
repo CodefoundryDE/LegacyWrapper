@@ -68,4 +68,10 @@ namespace LegacyWrapperTest.Integration.Interface
     {
         void MethodWithoutAttribute();
     }
+
+    [LegacyDllImport("User32.dll")]
+    interface ITestDllWithProtectedInterface : IDisposable
+    {
+        void MethodWithoutAttribute();
+    }
 }

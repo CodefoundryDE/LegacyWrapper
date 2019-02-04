@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using LegacyWrapper.Common.Token;
-using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Configuration;
 using LegacyWrapperClient.DynamicProxy;
 using LegacyWrapperClient.ProcessHandling;
 using LegacyWrapperClient.Token;
 using LegacyWrapperClient.Transport;
 using Ninject;
-using Ninject.Modules;
 using PommaLabs.Thrower;
 
 namespace LegacyWrapperClient.Client
@@ -64,7 +55,8 @@ namespace LegacyWrapperClient.Client
         /// <returns>Returns a new instance of TFunctions.</returns>
         public static TFunctions GetInstance(IWrapperConfig configuration)
         {
-            Raise.ArgumentException.If(!typeof(TFunctions).IsInterface, nameof(TFunctions), "Generic parameter type <TFunctions> must be an interface.");
+            Raise.ArgumentException.IfNot(typeof(TFunctions).IsInterface, nameof(TFunctions), "Generic parameter type <TFunctions> must be an interface.");
+            Raise.ArgumentException.IfNot(typeof(TFunctions).IsPublic, nameof(TFunctions), "The provided interface type <TFunctions> must be public.");
 
             CreateToken();
 

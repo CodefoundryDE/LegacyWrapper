@@ -26,6 +26,19 @@ namespace LegacyWrapperTest.Integration.Client
             }
         }
 
+        [TestMethod, ExpectedException(typeof(ArgumentException))]
+        public void TestNonPublicInterface()
+        {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
+            using (var client = WrapperProxyFactory<ITestDllWithProtectedInterface>.GetInstance(configuration))
+            {
+                client.MethodWithoutAttribute();
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(LegacyWrapperException))]
         public void TestLoadNonExistingLibrary()
         {
