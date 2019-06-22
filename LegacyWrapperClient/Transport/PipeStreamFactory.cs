@@ -15,9 +15,9 @@ namespace LegacyWrapperClient.Transport
 
         public virtual PipeStream GetConnectedPipeStream(PipeToken pipeToken)
         {
-            NamedPipeClientStream pipe = new NamedPipeClientStream(LocalPipeUrl, pipeToken.Token, PipeDirection.InOut);
+            NamedPipeClientStream pipe = new NamedPipeClientStream(LocalPipeUrl, pipeToken.Token, PipeDirection.InOut, PipeOptions.Asynchronous);
             pipe.Connect();
-            pipe.ReadMode = PipeTransmissionMode.Message;
+            pipe.ReadMode = PipeTransmissionMode.Byte;
 
             return pipe;
         }

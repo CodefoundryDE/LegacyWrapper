@@ -34,10 +34,11 @@ namespace LegacyWrapper.Transport
         private void OpenPipeServer()
         {
             PipeDirection pipeDirection = PipeDirection.InOut;
-            PipeTransmissionMode pipeTransmissionMode = PipeTransmissionMode.Message;
+            PipeTransmissionMode pipeTransmissionMode = PipeTransmissionMode.Byte;
+            PipeOptions pipeOptions = PipeOptions.Asynchronous;
             int maxNumberOfServerInstances = 1;
 
-            _pipe = new NamedPipeServerStream(_pipeToken.Token, pipeDirection, maxNumberOfServerInstances, pipeTransmissionMode);
+            _pipe = new NamedPipeServerStream(_pipeToken.Token, pipeDirection, maxNumberOfServerInstances, pipeTransmissionMode, pipeOptions);
             _pipe.WaitForConnection();
         }
 
