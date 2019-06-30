@@ -44,6 +44,20 @@ namespace LegacyWrapperClient.Client
             string errorMessage = "Returned parameters differ in length from passed parameters";
             Raise.InvalidDataException.If(callData.Parameters.Length != callResult.Parameters.Length, errorMessage);
 
+            // HUGE HACK
+            for (int i = 0; i < callResult.Parameters.Length; i++)
+            {
+                if (callResult.Parameters[i] is int[])
+                {
+                    int[] pi = (int[])callResult.Parameters[i];
+                    pi.CopyTo((int[])callData.Parameters[i], 0);
+                }
+                else
+                {
+                    callData.Parameters[i] = callResult.Parameters[i];
+                }
+            }
+
             Array.Copy(callResult.Parameters, callData.Parameters, callResult.Parameters.Length);
         }
 
