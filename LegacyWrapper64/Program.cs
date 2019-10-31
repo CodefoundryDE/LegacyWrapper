@@ -16,7 +16,6 @@ namespace LegacyWrapper64
         /// </param>
         static void Main(string[] args)
         {
-            //Debugger.Launch();
             ICallRequestHandler requestHandler = CallRequestHandlerFactory.GetInstance(args);
             requestHandler.Call();
         }
