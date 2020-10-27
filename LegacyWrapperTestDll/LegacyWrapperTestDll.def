@@ -4,5 +4,8 @@ EXPORTS
 	TestNormalFunc
 	TestPCharHandling
 	TestPWideCharHandling
+	TestBstrHandling
+	TestBstrPointerHandling
+	TestBstrRefHandling
 	TestVarParamHandling
 	TestMultipleVarParamsHandling
