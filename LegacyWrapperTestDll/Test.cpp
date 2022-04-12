@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <wchar.h>
+#include <wtypes.h>
 #include <Windows.h>
 
 #define DllExport __declspec(dllexport)
@@ -39,6 +40,26 @@ extern "C" {
 		}
 
 		return ptr;
+	}
+	
+	DllExport int TestBstrHandling(BSTR AParam) {
+		size_t size = sizeof(wchar_t) * SysStringLen(AParam) + 1;
+
+		return size;
+	}
+
+	DllExport int TestBstrPointerHandling(BSTR* AParam) {
+		size_t size = sizeof(wchar_t) * SysStringLen(*AParam) + 1;
+
+		return size;
+	}
+
+	DllExport int TestBstrRefHandling(BSTR* AParam) {
+		size_t size = sizeof(wchar_t) * SysStringLen(*AParam) + 1;
+
+		*AParam = SysAllocString(L"HELLO WORLD!");
+
+		return size;
 	}
 
 	/////

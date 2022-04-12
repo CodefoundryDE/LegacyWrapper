@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using LegacyWrapper.ErrorHandling;
-using LegacyWrapperClient.Architecture;
 using LegacyWrapperClient.Client;
 using LegacyWrapperClient.Configuration;
-using LegacyWrapperClient.DynamicProxy;
 using LegacyWrapperTest.Integration.Interface;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -108,6 +101,67 @@ namespace LegacyWrapperTest.Integration.Client
 
             Assert.AreEqual(input, result);
         }
+        
+        [TestMethod]
+        public void TestBstrHandling()
+        {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
+            string input = "Hello World";
+
+            int result;
+
+            using (var client = WrapperProxyFactory<ITestDll>.GetInstance(configuration))
+            {
+                result = client.TestBstrHandling(input);
+            }
+
+            // Result should be length of input
+            Assert.AreEqual(11, result);
+        }
+        
+        [TestMethod]
+        public void TestBstrPointerHandling()
+        {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
+            string input = "Hello World";
+
+            int result;
+
+            using (var client = WrapperProxyFactory<ITestDll>.GetInstance(configuration))
+            {
+                result = client.TestBstrPointerHandling(ref input);
+            }
+
+            // Result should be length of input
+            Assert.AreEqual(11, result);
+        }
+        
+        [TestMethod]
+        public void TestBstrRefHandling()
+        {
+            IWrapperConfig configuration = WrapperConfigBuilder.Create()
+                .TargetArchitecture(ArchitectureToLoad)
+                .Build();
+
+            IntPtr input = IntPtr.Zero;
+
+            int result;
+
+            using (var client = WrapperProxyFactory<ITestDll>.GetInstance(configuration))
+            {
+                result = client.TestBstrRefHandling(ref input);
+            }
+
+            // Result should be length of input
+            Assert.AreEqual(11, result);
+            Assert.AreEqual("HELLO WORLD", input);
+        }
 
         [TestMethod]
         public void TestRefParameterHandling()
@@ -164,7 +218,5 @@ namespace LegacyWrapperTest.Integration.Client
             // Ref param should be incremented by 1
             Assert.AreEqual(1339, parameter);
         }
-
-        
     }
 }
